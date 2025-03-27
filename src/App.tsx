@@ -1,18 +1,31 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 
 import "./App.css";
 import { Provider } from "react-redux";
 import RoutesApp from "./route/RouteS";
 import store from "./store/Store";
+import { useEffect } from "react";
+import { Toaster } from "sonner";
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+};
 
 function App() {
   return (
     <>
-      <BrowserRouter>
       <Provider store={store}>
-        <RoutesApp />
-        </Provider>,
-      </BrowserRouter>
+        <BrowserRouter>
+          <ScrollToTop />
+          <RoutesApp />
+          <Toaster position="bottom-left" duration={1500} richColors />
+        </BrowserRouter>
+      </Provider>
+
     </>
   );
 }

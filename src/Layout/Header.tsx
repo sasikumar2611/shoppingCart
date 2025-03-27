@@ -4,7 +4,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import {
-  Avatar,
   Badge,
   Box,
   IconButton,
@@ -14,83 +13,55 @@ import {
 import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import ProfileDrawer from "../Profiledrawer/ProfileDrawer";
-import axios from "axios";
 import { searchBarStyle } from "../common/commonStyle";
+import { AppDispatch, RootState } from "../store/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { getCartList, getFavouriteList } from "../store/action/product";
 const Header = () => {
   // const navigate = useNavigate();
-
+  const dispatch = useDispatch<AppDispatch>();
   const [searchProducts, setSearchProducts] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const toggleDrawer = (open: any) => () => {
-    setDrawerOpen(open);
-  };
-  const [userData, setUserData] = useState<any>({});
-  const loggedInUser = localStorage.getItem("loggedInUser");
-  const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
-  const UserList_API_URL = "http://localhost:3001/UserList";
-  const [image, setImage] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [save, setSave] = useState(false);
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      console.log(file);
-      setImage(file); // Store the file object for API upload
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target) {
-          setPreview(event.target.result as string); // Preview as Data URL
-        }
-        setSave(true);
-      };
-      reader.readAsDataURL(file); // Generate preview
-    }
+  const [drawerOpen, setDrawerOpen] = useState({
+    open: false,
+    list: "",
+  });
+  const toggleDrawer = (open: boolean, list: string) => () => {
+    setDrawerOpen({ open: open, list: list });
   };
 
-  const handledeleteImage = async () => {
-    const payload = {
-      ...userData,
-      Image: "",
-    };
-    try {
-      await axios.put(`${UserList_API_URL}/${userData.id}`, payload);
-      setSave(false);
-    } catch (error) {
-      console.log(error);
-    }
-    setPreview("");
-  };
-  const handleImageSave = async () => {
-    const payload = {
-      ...userData,
-      Image: preview,
-    };
-    try {
-      await axios.put(`${UserList_API_URL}/${userData.id}`, payload);
-      setSave(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const fetchUserdata = async () => {
-    try {
-      const { data: existingUsers } = await axios.get(UserList_API_URL);
-      console.log(existingUsers);
-      const user = existingUsers.find(
-        (userList: any) =>
-          userList.Email === loggedInUserEmail &&
-          userList.Username === loggedInUser
-      );
-      console.log(user);
-      setUserData(user);
-      setPreview(user.Image);
-    } catch (error) {
-      console.error("Error creating new chat:", error);
-    }
-  };
+  // const [preview, setPreview] = useState<string | null>(null);
+
+  const isFavourite = useSelector(
+    (state: RootState) => state.product.isFavourite
+  );
+  const isAddedToCart = useSelector(
+    (state: RootState) => state.product.isAddedToCart
+  );
+
+
+  const favouriteList =
+  useSelector((state: RootState) => state.product.favoriteList) || [];
+  const cartList =
+    useSelector((state: RootState) => state.product.cartList) || [];
+  
+  
+  const [favListCount, setFavListCount] = useState(0);
+  const [cartListCount, setCartListCount] = useState(0);
+
   useEffect(() => {
-    fetchUserdata();
-  }, []);
+     setFavListCount(favouriteList.length);
+   setCartListCount(cartList.length);
+  }, [favouriteList, cartList]);
+
+  useEffect(() => {
+    if (isFavourite) {
+      dispatch(getFavouriteList());
+    }
+    if (isAddedToCart) {
+      dispatch(getCartList());
+    }
+  }, [isFavourite, isAddedToCart,dispatch, favouriteList.length, cartList.length]);
+
   return (
     <>
       <Box
@@ -110,33 +81,32 @@ const Header = () => {
             mb: 2,
           }}
         >
-            <Box
+          <Box
             sx={{
-             width:'50%',
-             display:'flex',
+              width: "50%",
+              display: "flex",
             }}
           >
-
-          <TextField
-           placeholder="Search Products..."
-            value={searchProducts}
-            onChange={(e) => {
-              setSearchProducts(e.target.value);
-            }}
-            sx={searchBarStyle}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search
-                      sx={{ fontSize: "28px !important", color: "white" }}
+            <TextField
+              placeholder="Search Products..."
+              value={searchProducts}
+              onChange={(e) => {
+                setSearchProducts(e.target.value);
+              }}
+              sx={searchBarStyle}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search
+                        sx={{ fontSize: "28px !important", color: "white" }}
                       />
-                  </InputAdornment>
-                ),
-              },
-            }}
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
-            </Box>
+          </Box>
           <Box
             sx={{
               display: "flex",
@@ -145,38 +115,26 @@ const Header = () => {
               gap: 2,
             }}
           >
-            <IconButton>
-              <Badge badgeContent={4} color="primary">
+            <IconButton onClick={toggleDrawer(true, "favouriteList")}>
+              <Badge badgeContent={favListCount} color="primary">
                 <FavoriteRounded sx={{ color: "white", fontSize: "24px" }} />
               </Badge>
             </IconButton>
-            <IconButton>
-              <Badge badgeContent={4} color="primary">
+            <IconButton onClick={toggleDrawer(true, "cartList")}>
+              <Badge badgeContent={cartListCount} color="primary">
                 <LocalGroceryStore sx={{ color: "white", fontSize: "24px" }} />
               </Badge>
             </IconButton>
-            <Avatar
+            {/* <Avatar
               alt="Remy Sharp"
               src={`${preview}`}
               sx={{ width: 26, height: 26 }}
-              onClick={toggleDrawer(true)}
-            />
+              onClick={toggleDrawer(true, "profile")}
+            /> */}
           </Box>
         </Box>
       </Box>
-      <ProfileDrawer
-        drawerOpen={drawerOpen}
-        toggleDrawer={toggleDrawer}
-        userData={userData}
-        image={image}
-        preview={preview}
-        setPreview={setPreview}
-        handleImageChange={handleImageChange}
-        handledeleteImage={handledeleteImage}
-        save={save}
-        setSave={setSave}
-        handleImageSave={handleImageSave}
-      />
+      <ProfileDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
     </>
   );
 };

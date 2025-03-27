@@ -7,25 +7,36 @@ interface Product {
   name: string;
   price: number;
   rating: string;
+  category:string;
+  categoryId:number;
 }
 
 
 interface ProductState {
   isFavourite: boolean;
+  deleteFavourite: boolean;
   isAddedToCart: boolean;
+  deleteAddedToCart: boolean;
   visitProduct: Product | null;
   favoriteList: Product[];
   productList: any[];
   cartList: Product[];
+  amount:number;
+  orders:any[];
+  
 }
 
 const initialState: ProductState = {
   isFavourite: false,
+  deleteAddedToCart: false,
+  deleteFavourite: false,
   isAddedToCart: false,
   visitProduct: null,
   productList: [],
   favoriteList: [],
   cartList: [],
+  amount:0,
+  orders:[]
 };
 
 const productSlice = createSlice({
@@ -34,6 +45,12 @@ const productSlice = createSlice({
   reducers: {
     setIsFavourite: (state, action) => {
       state.isFavourite = action.payload;
+    },
+    setDeleteFavourite: (state, action) => {
+      state.deleteFavourite = action.payload;
+    },
+    setDeleteAddedToCart: (state, action) => {
+      state.deleteAddedToCart = action.payload;
     },
     setIsAddedToCart: (state, action) => {
       state.isAddedToCart = action.payload;
@@ -45,10 +62,16 @@ const productSlice = createSlice({
       state.productList = action.payload;
     },
     setFavoriteList: (state, action) => {
-      state.favoriteList = [...state.favoriteList, action.payload];
+      state.favoriteList = action.payload;
     },
     setCartList: (state, action) => {
-      state.cartList = [...state.cartList, action.payload];
+      state.cartList = action.payload;
+    },
+    setAmount: (state, action) => {
+      state.amount = action.payload;
+    },
+    setOrders: (state, action) => {
+      state.orders = action.payload;
     },
   },
 });
@@ -59,6 +82,9 @@ export const {
   setVisitProduct,
   setCartList,
   setFavoriteList,
-  setProductList
+  setProductList,
+  setAmount,
+  setDeleteFavourite,
+  setDeleteAddedToCart
 } = productSlice.actions;
 export default productSlice.reducer;

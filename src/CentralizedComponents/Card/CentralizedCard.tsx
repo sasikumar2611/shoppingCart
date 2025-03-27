@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import {
   Box,
-  Button,
   CardContent,
   Divider,
   Stack,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { CommonButton } from "../button/commonButton";
 
 interface CardComponentProps {
   bodyContent: React.ReactNode;
@@ -24,7 +24,6 @@ export const CentralizedCard: React.FC<CardComponentProps> = ({
   viewAll = true,
   viewBack = false,
 }) => {
-  const [_isHovered, _setIsHovered] = useState(false);
   const navigate = useNavigate();
   return (
     <Box>
@@ -44,30 +43,20 @@ export const CentralizedCard: React.FC<CardComponentProps> = ({
                 {title}
               </Typography>
               {viewAll && (
-                <Button
-                  sx={{
-                    color: "#7d4dfa",
-                    padding: "5px 10px",
-                    borderRadius: "15px",
-                    textTransform: "none",
-                  }}
+                <CommonButton
+                  label="View All"
                   onClick={() => navigate(`/Pages/${title}`)}
-                >
-                  View All
-                </Button>
+                  disableElevation
+                  sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
+                />
               )}
               {viewBack && (
-                <Button
-                  sx={{
-                    color: "#7d4dfa",
-                    padding: "5px 10px",
-                    borderRadius: "15px",
-                    textTransform: "none",
-                  }}
+                <CommonButton
+                  label="Back"
                   onClick={() => navigate(-1)}
-                >
-                  Back
-                </Button>
+                  disableElevation
+                  sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
+                />
               )}
             </Stack>
             <Divider />

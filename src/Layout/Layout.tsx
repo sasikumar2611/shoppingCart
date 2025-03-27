@@ -19,8 +19,6 @@ const Layout = () => {
         }}
       >
         <Header />
-        
-        {/* Outlet container takes remaining space */}
         <Box sx={{ flex: 1 }}>
           <Outlet />
         </Box>

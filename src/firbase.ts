@@ -1,16 +1,18 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getFirestore} from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 const firebaseConfig = {
-  apiKey: "AIzaSyA80zxYB3KABh87S7g2hXosv6ewKx0s35Y",
-  authDomain: "shopycart-b85ca.firebaseapp.com",
-  projectId: "shopycart-b85ca",
-  storageBucket: "shopycart-b85ca.firebasestorage.app",
-  messagingSenderId: "649686012348",
-  appId: "1:649686012348:web:225f4ea960cac1ae3a1bb9",
-  measurementId: "G-R3VL34F43F"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  databaseURL:import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const firestore = getFirestore(app);
+export const db =  getDatabase(app);
+

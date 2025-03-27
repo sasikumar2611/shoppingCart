@@ -1,9 +1,11 @@
+import {
+  addCartList,
+  addFavouriteList,
+  deleteFavouriteList,
+} from "../store/action/product";
 
-import { addCartList, addFavouriteList } from "../store/action/product";
-
-
-export const handleVisit = ({ item, category,navigate }: any) => {
-    navigate(`/Pages/${category}/${item.id}/${item.name}`);
+export const handleVisit = ({ item, category, navigate }: any) => {
+  navigate(`/Pages/${category}/${item.id}/${item.name}`);
   // const product = {
   //   category: category,
   //   categoryId:categoryId,
@@ -11,23 +13,44 @@ export const handleVisit = ({ item, category,navigate }: any) => {
   // };
 };
 
-export const handleFavouriteChange = ({  item, category ,categoryId,dispatch}: any) => {
+export const handleFavouriteChange = ({
+  item,
+  category,
+  categoryId,
+  dispatch,
+}: any) => {
   const product = {
     category: category,
-    categoryId:categoryId,
+    categoryId: categoryId,
     ...item,
   };
-  console.log("⭐ Added to Favourites:", product);
-  dispatch(addFavouriteList(product))
+  dispatch(addFavouriteList(product));
 };
 
-export const handleCartChange = ({  item, category ,categoryId,dispatch}: any) => {
+export const handleDelete = (item: any, list: string, dispatch: any) => {
 
+  if (list === "favouriteList") {
+
+    dispatch(deleteFavouriteList(item));
+
+  }
+  if (list === "cartList") {
+    dispatch(deleteFavouriteList(item));
+   
+  }
+};
+
+export const handleCartChange = ({
+  item,
+  category,
+  categoryId,
+  dispatch,
+}: any) => {
   const product = {
     category: category,
-    categoryId:categoryId,
+    categoryId: categoryId,
     ...item,
   };
-  dispatch(addCartList(product))
-  console.log("🛒 Added to Cart:", product);
+  dispatch(addCartList(product));
+
 };

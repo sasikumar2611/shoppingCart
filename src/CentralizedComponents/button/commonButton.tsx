@@ -12,6 +12,8 @@ interface CentralizedButtonProps {
     endIcon?: React.ReactNode;
     disabled?: boolean;
     fullWidth?: boolean;
+    disableElevation?: boolean;
+    disableRipple?: boolean;
     sx?: object;
   }
 
@@ -19,12 +21,15 @@ export const CommonButton: React.FC<CentralizedButtonProps> = ({
     label,
     onClick,
     variant = "contained",
-    color = "primary",
+    color,
     startIcon,
     endIcon,
     disabled = false,
     fullWidth = false,
+    disableElevation = false,
+    disableRipple = false,
     sx = {},
+    ...props
   }) => {
   return (
     <Button
@@ -35,7 +40,10 @@ export const CommonButton: React.FC<CentralizedButtonProps> = ({
       disabled={disabled}
       fullWidth={fullWidth}
       sx={{ ...btnstyle, ...sx }}
+      disableElevation={disableElevation}
+      disableRipple={disableRipple}
       onClick={onClick}
+      {...props}
     >
       {label}
     </Button>

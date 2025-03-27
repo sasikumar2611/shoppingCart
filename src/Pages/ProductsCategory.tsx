@@ -13,12 +13,10 @@ import { AppDispatch, RootState } from "../store/Store";
 
 const ProductsCategory = () => {
    const dispatch=useDispatch<AppDispatch>()
-  // const [isFavourite, setIsFavourite] = useState(false);
-  // const [isAddedToCart, setIsAddedToCart] = useState(false);
    const products=useSelector((state:RootState)=> state.product.productList)
   const params = useParams();
   const categoryData = products.find((item) => item.category === params.title);
-  console.log(categoryData);
+
 useEffect(()=>{
   dispatch(getProductList())
 },[dispatch])
@@ -26,22 +24,20 @@ useEffect(()=>{
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12 }} key={categoryData?.category}>
+        <Grid size={{ xs: 12 }} key={`${categoryData.id}-${categoryData.category}`}>
           <CentralizedCard
             title={categoryData?.category || ""}
             viewAll={false}
             viewBack={true}
             bodyContent={
               <Grid container spacing={3} alignItems="center">
-                {/* Left Navigation Button */}
-
-                {/* Swipeable Product View */}
+                
                 <Grid size={{ xs: 12 }}>
                   <Grid container spacing={2}>
                     {categoryData?.items.map((item:any) => (
-                      <Grid size={{ xs: 3 }} key={item.id}>
+                      <Grid size={{ xs: 3 }} key={`${categoryData.id}-${categoryData.category}`}>
                         <Productcard
-                        categoryId={categoryData.categoryId}
+                        categoryId={categoryData?.id}
                           handleVisit={handleVisit}
                           handleCartChange={handleCartChange}
                           handleFavouriteChange={handleFavouriteChange}

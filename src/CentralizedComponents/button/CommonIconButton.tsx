@@ -1,15 +1,13 @@
-import { Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton, IconButtonProps } from "@mui/material";
 import React from "react";
 
-
-interface CommonIconButtonProps {
+interface CommonIconButtonProps extends IconButtonProps {
   showTooltip?: boolean;
   isFavourite?: boolean;
   tooltipTitle?: string;
   icon: React.ReactNode;
-  color?: "primary" | "secondary" | "error" | "success" | "info" | "warning";
   checkedIcon?: React.ReactNode;
-  onClick?: any
+  color?: "primary" | "secondary" | "error" | "success" | "info" | "warning";
 }
 
 export const CommonIconButton: React.FC<CommonIconButtonProps> = ({
@@ -17,18 +15,16 @@ export const CommonIconButton: React.FC<CommonIconButtonProps> = ({
   isFavourite,
   tooltipTitle = "",
   icon,
-  color = "primary",
   checkedIcon,
-  onClick,
+  color='primary',
+  ...props 
 }) => {
   return (
-    <>
-      <Tooltip title={showTooltip ? tooltipTitle : ""} placement="top">
-        <IconButton color={color} onClick={onClick}>
-          {isFavourite ? icon : checkedIcon}
-        </IconButton>
-      </Tooltip>
-    </>
+    <Tooltip title={showTooltip ? tooltipTitle : ""} placement="top">
+      <IconButton color={color} {...props}>
+        {isFavourite ? checkedIcon : icon}
+      </IconButton>
+    </Tooltip>
   );
 };
 

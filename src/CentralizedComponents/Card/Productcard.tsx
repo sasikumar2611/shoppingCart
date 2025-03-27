@@ -4,12 +4,11 @@ import {
   Box,
   Button,
   CardContent,
-
   Rating,
   Stack,
-  
   Typography,
 } from "@mui/material";
+import noImage from "../../assets/no image.jpg";
 import {
   Favorite,
   FavoriteBorder,
@@ -36,7 +35,7 @@ interface CardComponentProps {
   // setIsFavourite: any;
   // isAddedToCart: boolean;
   // setIsAddedToCart: any;
-  categoryId:number;
+  categoryId: number;
   category: string;
   handleVisit?: any;
   handleFavouriteChange?: any;
@@ -53,7 +52,6 @@ export const Productcard: React.FC<CardComponentProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   return (
     <Box sx={{ position: "relative" }}>
       <Card
@@ -68,9 +66,14 @@ export const Productcard: React.FC<CardComponentProps> = ({
         <CardContent sx={{ padding: "0px   !important" }}>
           <Stack direction={"column"}>
             <img
-              src={item?.image}
+              src={item?.image || noImage}
               alt={item?.name}
-              style={{ width: "100%", height: "170px" }}
+              style={{ width: "100%", height: "200px", objectFit: "contain" }}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null; 
+                target.src = noImage;
+              }}
             />
             <Stack
               direction={"row"}
@@ -85,7 +88,9 @@ export const Productcard: React.FC<CardComponentProps> = ({
                 checkedIcon={<RemoveRedEye />}
                 tooltipTitle="View Product"
                 icon={<Visibility />}
-                onClick={() => handleVisit({ item, category, navigate })}
+                onClick={() =>
+                  handleVisit({ item, category, categoryId, navigate })
+                }
               />
             </Stack>
             <Stack
@@ -97,22 +102,25 @@ export const Productcard: React.FC<CardComponentProps> = ({
               <Rating name="read-only" value={item.rating} readOnly />
               <Box sx={{ display: "flex", gap: 1 }}>
                 <CommonIconButton
-                  
                   icon={<FavoriteBorder />}
                   tooltipTitle="Add to Favourites"
                   color="error"
                   checkedIcon={<Favorite />}
                   onClick={() =>
-                    handleFavouriteChange({ item, category,categoryId, dispatch })
+                    handleFavouriteChange({
+                      item,
+                      category,
+                      categoryId,
+                      dispatch,
+                    })
                   }
                 />
                 <CommonIconButton
-                 
                   icon={<ShoppingCartCheckout />}
                   tooltipTitle="Add to Cart"
                   checkedIcon={<ShoppingCartCheckout />}
                   onClick={() =>
-                    handleCartChange({item, category,categoryId, dispatch })
+                    handleCartChange({ item, category, categoryId, dispatch })
                   }
                 />
               </Box>
@@ -122,11 +130,8 @@ export const Productcard: React.FC<CardComponentProps> = ({
               justifyContent={"space-between"}
               alignItems={"center"}
             >
-              <Typography
-                gutterBottom
-                sx={{ color: "black", fontSize: "16px" }}
-              >
-                <span style={{ fontSize: "16px" }}>&#8377; </span> {item.price}
+              <Typography sx={{ color: "black", fontSize: "16px" }}>
+                <span style={{ fontSize: "14px" }}>&#8377; </span> {item.price}
               </Typography>
               <Button sx={btnstyle} onClick={() => {}}>
                 Buy Now

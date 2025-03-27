@@ -1,36 +1,56 @@
 import { Box, Divider, Rating, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Favorite,
   FavoriteBorder,
   ShoppingCartCheckout,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CustomCard } from "../CentralizedComponents/Card/CustomCard";
 import { CommonButton } from "../CentralizedComponents/button/commonButton";
 import CommonIconButton from "../CentralizedComponents/button/CommonIconButton";
-import { handleCartChange, handleFavouriteChange } from "../common/commonMethods";
+import noImage from "../assets/no image.jpg";
+import {
+  handleCartChange,
+  handleFavouriteChange,
+} from "../common/commonMethods";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/Store";
+import { getProductList } from "../store/action/product";
 
 const ViewProduct = () => {
-  //   const categoryData = products.find((item) => item.category === params.title);
-  //   console.log(categoryData);
   const navigate = useNavigate();
   const [isFavourite, _setIsFavourite] = useState(false);
   const [isAddedToCart, _setIsAddedToCart] = useState(false);
-  
+  const dispatch = useDispatch<AppDispatch>();
+  const params = useParams();
+
+  const products = useSelector((state: RootState) =>
+    state.product.productList.find((item) => item.category === params.category)
+  );
+
+
+  const product = products?.items.find(
+    (item: any) => item.id === Number(params.id)
+  );
+
 
   const handleNavigate = () => {
     navigate(-1);
   };
   const handleBuy = () => {};
+  useEffect(() => {
+    dispatch(getProductList());
+  }, [dispatch]);
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "80vh", // Full viewport height
+        height: "100%", 
         display: "flex",
+        flex: 1,
         flexDirection: "column",
       }}
     >
@@ -47,17 +67,23 @@ const ViewProduct = () => {
                 <Grid size={{ xs: 6 }} sx={{ height: "100%" }}>
                   <Box
                     sx={{
-                      height: "100%",
+                      flex: 1,
                       width: "100%",
+                      height: "500px",
                     }}
                   >
                     <img
-                      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                      alt=""
+                      src={product?.image || noImage}
+                      alt={product?.name}
                       style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover",
+                        objectFit: "contain",
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = noImage;
                       }}
                     />
                   </Box>
@@ -66,22 +92,24 @@ const ViewProduct = () => {
                   <Grid container spacing={2} sx={{ height: "100%" }}>
                     <Grid size={{ xs: 7 }}>
                       <Stack direction={"column"} gap={1}>
-                        <Typography sx={{ fontSize: "30px" }}>Title</Typography>
+                        <Typography sx={{ fontSize: "30px" }}>
+                          {product?.name}
+                        </Typography>
                         <Stack direction={"row"} gap={1} alignItems={"center"}>
                           <Rating
                             name="read-only"
-                            value={4.5}
+                            value={product?.rating}
                             readOnly
                             precision={0.5}
                           />
                           <Typography sx={{ fontSize: "14px" }}>
-                            (4.5)
+                            {product?.rating}
                           </Typography>
                         </Stack>
                         <Divider />
                         <Typography sx={{ fontSize: "22px" }}>
-                          <span style={{ fontSize: "16px" }}>&#8377; </span>
-                          Description
+                          <span style={{ fontSize: "14px" }}>&#8377; </span>
+                          {product?.price}
                         </Typography>
                       </Stack>
                     </Grid>
@@ -94,7 +122,7 @@ const ViewProduct = () => {
                         <Stack direction={"column"} gap={1}>
                           <Typography sx={{ fontSize: "22px" }}>
                             <span style={{ fontSize: "16px" }}>&#8377; </span>
-                            Description
+                            {product?.price}
                           </Typography>
                           <Stack direction={"row"} gap={2}>
                             <CommonIconButton
@@ -103,14 +131,28 @@ const ViewProduct = () => {
                               tooltipTitle="Add to Favourites"
                               color="error"
                               checkedIcon={<Favorite />}
-                              onClick={handleFavouriteChange}
+                              onClick={() =>
+                                handleFavouriteChange({
+                                  item: product,
+                                  category: products?.category,
+                                  categoryId: products?.id,
+                                  dispatch,
+                                })
+                              }
                             />
                             <CommonIconButton
                               isFavourite={isAddedToCart}
                               icon={<ShoppingCartCheckout />}
                               tooltipTitle="Add to Cart"
                               checkedIcon={<ShoppingCartCheckout />}
-                              onClick={handleCartChange}
+                              onClick={() =>
+                                handleCartChange({
+                                  item: product,
+                                  category: products?.category,
+                                  categoryId: products?.id,
+                                  dispatch,
+                                })
+                              }
                             />
                           </Stack>
 

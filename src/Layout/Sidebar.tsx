@@ -67,7 +67,7 @@ const Sidebar = ({
   const activeIndex = SidebarData.findIndex(
     (item) => `${item.path}` === location.pathname
   );
-  console.log(activeIndex);
+
   return (
     <Box
       sx={{
