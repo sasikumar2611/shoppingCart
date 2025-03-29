@@ -9,6 +9,7 @@ import NotFound from "../Pages/NotFound";
 import AllProducts from "../Pages/AllProducts";
 import ProductsCategory from "../Pages/ProductsCategory";
 import ViewProduct from "../Pages/ViewProduct";
+import PaymentPage from "../Pages/Payment";
 const RoutesApp = () => {
   return (
     <Routes>
@@ -43,6 +44,12 @@ const RoutesApp = () => {
           path="Profile"
           element={
               <ProfilePage />
+          }
+        />
+        <Route
+          path="Payment"
+          element={
+              <PaymentPage />
           }
         />
         <Route

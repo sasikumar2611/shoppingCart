@@ -34,8 +34,8 @@ export const sidebarStyle = {
 export const btnstyle = {
   backgroundColor: "#7d4dfa",
   color: "white",
-  padding: "5px 10px",
-  borderRadius: "15px",
+  padding: "7px 14px",
+  borderRadius: "25px",
   textTransform: "none",
 }
 
@@ -206,8 +206,8 @@ export const   centralizedTextFieldStyle = {
     outline: "none",
   },
   "& .MuiOutlinedInput-root": {
-    borderRadius: "25px",
-    boxShadow: "inset 2px 5px 10px rgba(0, 0, 0, 0.3)",
+    borderRadius: "10px",
+    // boxShadow: "inset 2px 5px 10px rgba(0, 0, 0, 0.3)",
   },
   "& .MuiFormLabel-root": {
     color: "black !important",

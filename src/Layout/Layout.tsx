@@ -6,16 +6,21 @@ import { Outlet } from "react-router-dom";
 const Layout = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <Box sx={{ display: "flex", width: "100%",minHeight:'100vh' }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        minHeight: "100vh",
+      }}
+    >
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Box
         sx={{
           width: "100%",
-          backgroundColor:'#f1e8f8',
+          backgroundColor: "#f1e8f8",
           padding: "20px",
           display: "flex",
           flexDirection: "column",
-        
         }}
       >
         <Header />

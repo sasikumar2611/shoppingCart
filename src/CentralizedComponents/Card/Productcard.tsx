@@ -71,7 +71,7 @@ export const Productcard: React.FC<CardComponentProps> = ({
               style={{ width: "100%", height: "200px", objectFit: "contain" }}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.onerror = null; 
+                target.onerror = null;
                 target.src = noImage;
               }}
             />
@@ -95,12 +95,11 @@ export const Productcard: React.FC<CardComponentProps> = ({
             </Stack>
             <Stack
               direction={"row"}
-              gap={1}
               justifyContent={"space-between"}
               alignItems={"center"}
             >
               <Rating name="read-only" value={item.rating} readOnly />
-              <Box sx={{ display: "flex", gap: 1 }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
                 <CommonIconButton
                   icon={<FavoriteBorder />}
                   tooltipTitle="Add to Favourites"

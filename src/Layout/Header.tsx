@@ -17,19 +17,17 @@ import { searchBarStyle } from "../common/commonStyle";
 import { AppDispatch, RootState } from "../store/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartList, getFavouriteList } from "../store/action/product";
+import { toggleDrawer } from "../common/commonMethods";
 const Header = () => {
   // const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [searchProducts, setSearchProducts] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState({
-    open: false,
-    list: "",
-  });
-  const toggleDrawer = (open: boolean, list: string) => () => {
-    setDrawerOpen({ open: open, list: list });
-  };
 
   // const [preview, setPreview] = useState<string | null>(null);
+
+  // const drawerOpen = useSelector(
+  //   (state: RootState) => state.product.drawerOpen
+  // );
 
   const isFavourite = useSelector(
     (state: RootState) => state.product.isFavourite
@@ -38,19 +36,17 @@ const Header = () => {
     (state: RootState) => state.product.isAddedToCart
   );
 
-
   const favouriteList =
-  useSelector((state: RootState) => state.product.favoriteList) || [];
+    useSelector((state: RootState) => state.product.favoriteList) || [];
   const cartList =
     useSelector((state: RootState) => state.product.cartList) || [];
-  
-  
+
   const [favListCount, setFavListCount] = useState(0);
   const [cartListCount, setCartListCount] = useState(0);
 
   useEffect(() => {
-     setFavListCount(favouriteList.length);
-   setCartListCount(cartList.length);
+    setFavListCount(favouriteList.length);
+    setCartListCount(cartList.length);
   }, [favouriteList, cartList]);
 
   useEffect(() => {
@@ -60,13 +56,24 @@ const Header = () => {
     if (isAddedToCart) {
       dispatch(getCartList());
     }
-  }, [isFavourite, isAddedToCart,dispatch, favouriteList.length, cartList.length]);
+  }, [
+    isFavourite,
+    isAddedToCart,
+    dispatch,
+    favouriteList.length,
+    cartList.length,
+  ]);
 
   return (
     <>
       <Box
         sx={{
           transition: "all 0.3s ease-in-out",
+          position: "sticky",
+          top: 20,
+          zIndex: 100,
+         
+        
         }}
       >
         <Box
@@ -115,12 +122,16 @@ const Header = () => {
               gap: 2,
             }}
           >
-            <IconButton onClick={toggleDrawer(true, "favouriteList")}>
+            <IconButton
+              onClick={() => dispatch(toggleDrawer(true, "favouriteList"))}
+            >
               <Badge badgeContent={favListCount} color="primary">
                 <FavoriteRounded sx={{ color: "white", fontSize: "24px" }} />
               </Badge>
             </IconButton>
-            <IconButton onClick={toggleDrawer(true, "cartList")}>
+            <IconButton
+              onClick={() => dispatch(toggleDrawer(true, "cartList"))}
+            >
               <Badge badgeContent={cartListCount} color="primary">
                 <LocalGroceryStore sx={{ color: "white", fontSize: "24px" }} />
               </Badge>
@@ -134,7 +145,7 @@ const Header = () => {
           </Box>
         </Box>
       </Box>
-      <ProfileDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
+      <ProfileDrawer />
     </>
   );
 };

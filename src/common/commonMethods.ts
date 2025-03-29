@@ -1,8 +1,11 @@
 import {
   addCartList,
   addFavouriteList,
+  addOrderList,
+  deleteCartList,
   deleteFavouriteList,
 } from "../store/action/product";
+import { setDrawerOpen } from "../store/store/productData";
 
 export const handleVisit = ({ item, category, navigate }: any) => {
   navigate(`/Pages/${category}/${item.id}/${item.name}`);
@@ -28,15 +31,11 @@ export const handleFavouriteChange = ({
 };
 
 export const handleDelete = (item: any, list: string, dispatch: any) => {
-
   if (list === "favouriteList") {
-
     dispatch(deleteFavouriteList(item));
-
   }
   if (list === "cartList") {
-    dispatch(deleteFavouriteList(item));
-   
+    dispatch(deleteCartList(item));
   }
 };
 
@@ -52,5 +51,19 @@ export const handleCartChange = ({
     ...item,
   };
   dispatch(addCartList(product));
+};
 
+export const handleBuy = (
+  item: any,
+  amount: number,
+  navigate: any,
+  dispatch: any
+) => {
+  navigate("/Pages/Payment");
+
+  dispatch(addOrderList(item, amount));
+};
+
+export const toggleDrawer = (open: boolean, list: string)=>(dispatch:any) => {
+  dispatch(setDrawerOpen({ open: open, list: list }));
 };

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import { CentralizedCard } from "../CentralizedComponents/Card/CentralizedCard";
@@ -17,7 +17,7 @@ import { CustomCard } from "../CentralizedComponents/Card/CustomCard";
 import { useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const cardsPerView = 4; // Show only 4 items at a time
   const products = useSelector((state: RootState) => state.product.productList);
@@ -29,28 +29,54 @@ const AllProducts = () => {
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       <Grid container spacing={2}>
-        {products?.map((product,) => (
-          <Box key={`${product.id}-${product.category}-${uuidv4()}`} sx={{ display: "flex", gap: 2 }}>
-            <CustomCard
-            sx={{cursor:'pointer'}}
-              bodyContent={
-                <Typography sx={{ fontSize: "12px" }}>
-                  {product.category}
-                </Typography>
-              }
-              onClick={() =>  navigate(`/Pages/${product.category}`)}
-            />
-          </Box>
-        ))}
+        <Grid size={{ xs: 12 }}>
+          <Stack
+            width={"100%"}
+            direction="row"
+            spacing={2}
+            sx={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              whiteSpace: "nowrap",
+              boxSizing: "border-box",
+              scrollbarWidth: "none", // Hide scrollbar for Firefox
+              "&::-webkit-scrollbar": {
+                display: "none", // Hide scrollbar for Chrome, Safari, Edge
+              },
+            }}
+          >
+            {products?.map((product) => (
+              <Box
+                key={`${product.id}-${product.category}-${uuidv4()}`}
+                             >
+                <CustomCard
+                  sx={{ boxShadow:'none' }}
+                  bodyContent={
+                    <Typography sx={{ fontSize: "12px" }}>
+                      {product.category}
+                    </Typography>
+                  }
+                  onClick={() => navigate(`/Pages/${product.category}`)}
+                />
+              </Box>
+            ))}
+          </Stack>
+        </Grid>
 
-        {products.map((product,) => (
-          <Grid size={{ xs: 12 }} key={`${product.id}-${product.category}-${uuidv4()}`}>
+        {products.map((product) => (
+          <Grid
+            size={{ xs: 12 }}
+            key={`${product.id}-${product.category}-${uuidv4()}`}
+          >
             <CentralizedCard
               title={product.category}
               bodyContent={
-                <Grid container spacing={3} alignItems="center">
+                <Grid container spacing={2} alignItems="center">
                   {product.items.slice(0, cardsPerView).map((item: any) => (
-                    <Grid size={{ xs: 3 }} key={`${product.id}-${product.category}-${uuidv4()}`}>
+                    <Grid
+                      size={{ xs: 12, sm: 6, md: 3 }}
+                      key={`${product.id}-${product.category}-${uuidv4()}`}
+                    >
                       <Productcard
                         categoryId={product.id}
                         category={product.category}

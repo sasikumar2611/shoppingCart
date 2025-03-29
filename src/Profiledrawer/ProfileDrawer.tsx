@@ -19,14 +19,57 @@ import { btnstyle } from "../common/commonStyle";
 import CommonIconButton from "../CentralizedComponents/button/CommonIconButton";
 import { AppDispatch, RootState } from "../store/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { handleCartChange, handleDelete } from "../common/commonMethods";
+import {
+  handleBuy,
+  handleCartChange,
+  handleDelete,
+  toggleDrawer,
+} from "../common/commonMethods";
 import { getCartList, getFavouriteList } from "../store/action/product";
 import noImage from "../assets/no image.jpg";
 import { CommonButton } from "../CentralizedComponents/button/commonButton";
 import { setAmount } from "../store/store/productData";
+import { useNavigate } from "react-router-dom";
 // import CentralizedUploadImage from "../CentralizedComponents/CentralizedUploadImage";
-const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
+const ProfileDrawer = () => {
   const dispatch = useDispatch<AppDispatch>();
+
+  const navigate = useNavigate();
+
+  const drawerOpen = useSelector(
+    (state: RootState) => state.product.drawerOpen
+  );
+
+  const favouriteList =
+    useSelector((state: RootState) => state.product.favoriteList) || [];
+
+  const validFavourites = favouriteList.filter(
+    (item) => item && typeof item === "object"
+  );
+
+  const cartList =
+    useSelector((state: RootState) => state.product.cartList) || [];
+
+  const isFavourite = useSelector(
+    (state: RootState) => state.product.isFavourite
+  );
+
+  const amount = useSelector((state: RootState) => state.product.amount);
+
+  const isFavDelete = useSelector(
+    (state: RootState) => state.product.deleteAddedToCart
+  );
+
+  const isCartDelete = useSelector(
+    (state: RootState) => state.product.deleteFavourite
+  );
+
+  const list =
+    drawerOpen.list === "favouriteList"
+      ? validFavourites
+      : drawerOpen.list === "cartList"
+      ? cartList
+      : [];
 
   const [price, setPrice] = useState<{ [key: string]: number }>({});
 
@@ -44,44 +87,25 @@ const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
     }));
   };
 
-  const favouriteList =
-    useSelector((state: RootState) => state.product.favoriteList) || [];
+  const products = list.map((item) => ({
+    ...item,
+    productId: item.id,
+    quantity: price[`${item.category}/${item.id}`] || 1,
+    totalAmount: Number(item.price) * price[`${item.category}/${item.id}`] || 1,
+  }));
 
-  const validFavourites = favouriteList.filter(
-    (item) => item && typeof item === "object"
-  );
+  console.log(products);
 
-  const cartList =
-    useSelector((state: RootState) => state.product.cartList) || [];
+  useEffect(() => {
+    if (list.length > 0) {
+      const initialPrices = list.reduce((acc, item) => {
+        acc[`${item.category}/${item.id}`] = 1;
+        return acc;
+      }, {} as { [key: string]: number });
 
-  const isFavourite = useSelector(
-    (state: RootState) => state.product.isFavourite
-  );
-
-  const amount = useSelector((state: RootState) => state.product.amount);
-  const isFavDelete = useSelector(
-    (state: RootState) => state.product.deleteAddedToCart
-  );
-  const isCartDelete = useSelector(
-    (state: RootState) => state.product.deleteFavourite
-  );
-
-  const list =
-    drawerOpen.list === "favouriteList"
-      ? validFavourites
-      : drawerOpen.list === "cartList"
-      ? cartList
-      : [];
-
-  // const order={
-  //   products:list.map((item)=>{
-  //     return{
-  //      product:item,
-  //       quantity:price[`${item?.category}/${item?.id}`] || 1
-  //     }
-  //   }),
-  //   price:amount
-  // }
+      setPrice(initialPrices);
+    }
+  }, [list]);
 
   useEffect(() => {
     if (drawerOpen.list === "cartList") {
@@ -92,7 +116,7 @@ const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
 
       dispatch(setAmount(total));
     }
-  }, [list, price, drawerOpen.list,dispatch]);
+  }, [list, price, drawerOpen.list, dispatch]);
 
   useEffect(() => {
     if (drawerOpen.list === "favouriteList" || isFavDelete) {
@@ -101,15 +125,16 @@ const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
     if (drawerOpen.list === "cartList" || isCartDelete) {
       dispatch(getCartList());
     }
-  }, [dispatch,isFavDelete,isCartDelete]);
+  }, [dispatch, isFavDelete, isCartDelete]);
+
   return (
     <Drawer
       anchor="right"
       open={drawerOpen.open}
-      onClose={toggleDrawer(false)}
+      onClose={() => dispatch(toggleDrawer(false, ""))}
       sx={{
         "& .MuiDrawer-paper": {
-          width: "400px",
+          width: { md: "400px", sm: "400px", xs: "100%" },
           backgroundColor: "#fff",
           color: "white",
         },
@@ -129,7 +154,7 @@ const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
             <CommonIconButton
               color="info"
               size="small"
-              onClick={toggleDrawer(false, "")}
+              onClick={() => dispatch(toggleDrawer(false, ""))}
               icon={<Close />}
             />
           </Stack>
@@ -153,7 +178,6 @@ const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
                   width="100%"
                   height="100%"
                   sx={{ display: "flex", gap: 2 }}
-                
                 >
                   <Box width="35%" height="100%">
                     <img
@@ -261,41 +285,58 @@ const ProfileDrawer = ({ drawerOpen, toggleDrawer }: any) => {
             );
           })}
           {drawerOpen.list === "cartList" && (
-            <Stack direction={"column"} justifyContent={"center"}>
-              <Divider />
-              <Stack direction={"row"} justifyContent={"space-between"}>
-                <Typography
-                  variant="h6"
-                  m={"10px 0"}
-                  sx={{ color: "black", fontSize: "16px" }}
-                >
-                  SubTotal({list?.length} Items):
-                </Typography>
-                <Typography
-                  variant="h6"
-                  m={"10px 0"}
-                  sx={{ color: "black", fontSize: "14px" }}
-                >
-                  <span style={{ fontSize: "12px" }}>&#8377; </span>{" "}
-                  {amount.toFixed(2)}
-                </Typography>
-              </Stack>
-              <Divider />
-            </Stack>
-          )}
-          {drawerOpen.list === "cartList" && (
-            <Stack direction={"column"} justifyContent={"center"}>
+            <Stack
+              width={"100%"}
+              height={"100px"}
+              direction={"column"}
+              gap={1}
+              sx={{ position: "sticky", bottom: 0, backgroundColor: "white" }}
+            >
               <Stack
-                direction={"row"}
-                justifyContent={"space-between"}
-                alignItems={"center"}
+                direction={"column"}
+                width={"100%"}
+                justifyContent={"center"}
               >
-                <CommonButton
-                  label="Cancel"
-                  sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
-                  onClick={() => {}}
-                />
-                <CommonButton label="Proceed to Buy" onClick={() => {}} />
+                <Divider />
+                <Stack direction={"row"} justifyContent={"space-between"}>
+                  <Typography
+                    variant="h6"
+                    m={"10px 0"}
+                    sx={{ color: "black", fontSize: "16px" }}
+                  >
+                    SubTotal({list?.length} Items):
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    m={"10px 0"}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    <span style={{ fontSize: "12px" }}>&#8377; </span>{" "}
+                    {amount.toFixed(2)}
+                  </Typography>
+                </Stack>
+                <Divider />
+              </Stack>
+
+              <Stack direction={"column"} justifyContent={"center"}>
+                <Stack
+                  direction={"row"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <CommonButton
+                    label="Cancel"
+                    sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
+                    onClick={() => {}}
+                  />
+                  <CommonButton
+                    label="Proceed to Buy"
+                    onClick={() => {
+                      dispatch(toggleDrawer(false, ""));
+                      handleBuy(products, amount, navigate, dispatch);
+                    }}
+                  />
+                </Stack>
               </Stack>
             </Stack>
           )}

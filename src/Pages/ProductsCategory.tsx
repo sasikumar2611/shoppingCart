@@ -35,7 +35,7 @@ useEffect(()=>{
                 <Grid size={{ xs: 12 }}>
                   <Grid container spacing={2}>
                     {categoryData?.items.map((item:any) => (
-                      <Grid size={{ xs: 3 }} key={`${categoryData.id}-${categoryData.category}`}>
+                      <Grid size={{ xs: 12,sm: 6, md: 3 }} key={`${categoryData.id}-${categoryData.category}`}>
                         <Productcard
                         categoryId={categoryData?.id}
                           handleVisit={handleVisit}

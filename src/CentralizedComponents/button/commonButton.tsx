@@ -6,6 +6,7 @@ import { btnstyle } from '../../common/commonStyle';
 interface CentralizedButtonProps {
     label: string;
     onClick?: () => void;
+    type?: "button" | "submit" | "reset";
     variant?: "contained" | "outlined" | "text";
     color?: "primary" | "secondary" | "error" | "success" | "info" | "warning";
     startIcon?: React.ReactNode;
@@ -20,6 +21,7 @@ interface CentralizedButtonProps {
 export const CommonButton: React.FC<CentralizedButtonProps> = ({
     label,
     onClick,
+    type,
     variant = "contained",
     color,
     startIcon,
@@ -33,6 +35,7 @@ export const CommonButton: React.FC<CentralizedButtonProps> = ({
   }) => {
   return (
     <Button
+      type={type}
       variant={variant}
       color={color}
       startIcon={startIcon}

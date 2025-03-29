@@ -1,4 +1,3 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 
 interface Product {
@@ -7,10 +6,9 @@ interface Product {
   name: string;
   price: number;
   rating: string;
-  category:string;
-  categoryId:number;
+  category: string;
+  categoryId: number;
 }
-
 
 interface ProductState {
   isFavourite: boolean;
@@ -21,9 +19,13 @@ interface ProductState {
   favoriteList: Product[];
   productList: any[];
   cartList: Product[];
-  amount:number;
-  orders:any[];
-  
+  amount: number;
+  orders: any[];
+  finalAmount: number;
+  drawerOpen: {
+    open: boolean;
+    list: string;
+  };
 }
 
 const initialState: ProductState = {
@@ -35,8 +37,13 @@ const initialState: ProductState = {
   productList: [],
   favoriteList: [],
   cartList: [],
-  amount:0,
-  orders:[]
+  amount: 0,
+  orders: [],
+  finalAmount: 0,
+  drawerOpen: {
+    open: false,
+    list: "",
+  },
 };
 
 const productSlice = createSlice({
@@ -73,6 +80,12 @@ const productSlice = createSlice({
     setOrders: (state, action) => {
       state.orders = action.payload;
     },
+    setFinalAmount: (state, action) => {
+      state.finalAmount = action.payload;
+    },
+    setDrawerOpen: (state, action) => {
+      state.drawerOpen = action.payload;
+    },
   },
 });
 
@@ -85,6 +98,9 @@ export const {
   setProductList,
   setAmount,
   setDeleteFavourite,
-  setDeleteAddedToCart
+  setDeleteAddedToCart,
+  setOrders,
+  setFinalAmount,
+  setDrawerOpen
 } = productSlice.actions;
 export default productSlice.reducer;

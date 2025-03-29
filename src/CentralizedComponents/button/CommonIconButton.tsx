@@ -21,7 +21,7 @@ export const CommonIconButton: React.FC<CommonIconButtonProps> = ({
 }) => {
   return (
     <Tooltip title={showTooltip ? tooltipTitle : ""} placement="top">
-      <IconButton color={color} {...props}>
+      <IconButton color={color} {...props} >
         {isFavourite ? checkedIcon : icon}
       </IconButton>
     </Tooltip>

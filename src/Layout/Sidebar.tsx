@@ -2,14 +2,14 @@ import React from "react";
 import { useState } from "react";
 import { Box, IconButton, Drawer, Tabs, Tab, Typography, Stack } from "@mui/material";
 import {
-  Dashboard,
   FormatListBulleted,
-  Home,
   KeyboardArrowLeft,
   KeyboardArrowRight,
-  Logout,
-  Person,
-  Settings,
+  // Dashboard,
+  // Home,
+  // Logout,
+  // Person,
+  // Settings,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarStyle } from "../common/commonStyle";
@@ -29,36 +29,36 @@ const Sidebar = ({
       value: "products",
       path: "/Pages/Products",
     },
-    {
-      icon: <Home sx={{ marginRight: 2 }} />,
-      text: "Home",
-      value: "home",
-      path: "/Pages/Home",
-    },
-    {
-      icon: <Person sx={{ marginRight: 2 }} />,
-      text: "Profile",
-      value: "profile",
-      path: "/Pages/Profile",
-    },
-    {
-      icon: <Settings sx={{ marginRight: 2 }} />,
-      text: "Settings",
-      value: "settings",
-      path: "/Pages/Settings",
-    },
-    {
-      icon: <Dashboard sx={{ marginRight: 2 }} />,
-      text: "Dashboard",
-      value: "dashboard",
-      path: "/Pages/Dashboard",
-    },
-    {
-      icon: <Logout sx={{ marginRight: 2 }} />,
-      text: "Logout",
-      value: "logout",
-      path: "/Pages/Logout",
-    },
+    // {
+    //   icon: <Home sx={{ marginRight: 2 }} />,
+    //   text: "Home",
+    //   value: "home",
+    //   path: "/Pages/Home",
+    // },
+    // {
+    //   icon: <Person sx={{ marginRight: 2 }} />,
+    //   text: "Profile",
+    //   value: "profile",
+    //   path: "/Pages/Profile",
+    // },
+    // {
+    //   icon: <Settings sx={{ marginRight: 2 }} />,
+    //   text: "Settings",
+    //   value: "settings",
+    //   path: "/Pages/Settings",
+    // },
+    // {
+    //   icon: <Dashboard sx={{ marginRight: 2 }} />,
+    //   text: "Dashboard",
+    //   value: "dashboard",
+    //   path: "/Pages/Dashboard",
+    // },
+    // {
+    //   icon: <Logout sx={{ marginRight: 2 }} />,
+    //   text: "Logout",
+    //   value: "logout",
+    //   path: "/Pages/Logout",
+    // },
   ];
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
