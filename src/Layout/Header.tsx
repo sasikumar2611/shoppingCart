@@ -1,13 +1,20 @@
 import {
   FavoriteRounded,
+  ListAlt,
   LocalGroceryStore,
+  Logout,
   Search,
+  Settings,
 } from "@mui/icons-material";
 import {
+  Avatar,
   Badge,
   Box,
   IconButton,
   InputAdornment,
+  ListItemIcon,
+  Menu,
+  MenuItem,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -16,18 +23,117 @@ import ProfileDrawer from "../Profiledrawer/ProfileDrawer";
 import { searchBarStyle } from "../common/commonStyle";
 import { AppDispatch, RootState } from "../store/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartList, getFavouriteList } from "../store/action/product";
+import {
+  getCartList,
+  getFavouriteList,
+  getSignedUpUser,
+  updateImage,
+} from "../store/action/product";
 import { toggleDrawer } from "../common/commonMethods";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   // const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [searchProducts, setSearchProducts] = useState("");
+  const [preview, setPreview] = useState<string | null>(null);
+  const [save, setSave] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const userObj = useSelector((state: RootState) => state.product.user);
+  console.log(userObj);
 
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+ 
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target) {
+          setPreview(event.target.result as string);
+        }
+        setSave(true);
+      };
+      reader.readAsDataURL(file); 
+    }
+  };
+  // const handledeleteImage = async () => {
+  //   const payload = {
+  //     ...userObj,
+  //     Image: "",
+  //   };
+  //   try {
+  //     await axios.put(`${UserList_API_URL}/${userData.id}`, payload);
+  //     setSave(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setPreview("");
+  // };
+  const handleUpdateImage = async (type: string) => {
+    const payload = {
+      ...userObj,
+      Image: preview,
+    };
+    try {
+      const response = await updateImage(payload, type);
+      if (type === "save" && response?.status === 200) {
+        setSave(false);
+      }
+      if (type === "delete" && response?.status === 200) {
+        setSave(false);
+        setPreview?.(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // const [preview, setPreview] = useState<string | null>(null);
 
   // const drawerOpen = useSelector(
   //   (state: RootState) => state.product.drawerOpen
   // );
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const menuData = [
+    {
+      icon: <Avatar src={userObj?.Image} sx={{ marginRight: 2 }} />,
+      text: "Profile",
+      value: "profile",
+      
+      func: () => {
+        dispatch(toggleDrawer(true, "profile"));
+        handleClose();
+      },
+    },
+    {
+      icon: <ListAlt sx={{ marginRight: 2 }} />,
+      text: "Order History",
+      value: "orderHistory",
+
+      func: () => navigate("/Pages/OrderHistory"),
+    },
+    {
+      icon: <Settings sx={{ marginRight: 2 }} />,
+      text: "Settings",
+      value: "settings",
+
+      func: () => navigate("/Pages/Settings"),
+    },
+    {
+      icon: <Logout sx={{ marginRight: 2 }} />,
+      text: "Sign Out",
+      value: "logout",
+
+      func: () => navigate("/"),
+    },
+  ];
 
   const isFavourite = useSelector(
     (state: RootState) => state.product.isFavourite
@@ -56,12 +162,14 @@ const Header = () => {
     if (isAddedToCart) {
       dispatch(getCartList());
     }
+    dispatch(getSignedUpUser());
   }, [
     isFavourite,
     isAddedToCart,
     dispatch,
     favouriteList.length,
     cartList.length,
+    preview,save
   ]);
 
   return (
@@ -72,8 +180,6 @@ const Header = () => {
           position: "sticky",
           top: 20,
           zIndex: 100,
-         
-        
         }}
       >
         <Box
@@ -136,16 +242,65 @@ const Header = () => {
                 <LocalGroceryStore sx={{ color: "white", fontSize: "24px" }} />
               </Badge>
             </IconButton>
-            {/* <Avatar
+
+            <Avatar
               alt="Remy Sharp"
-              src={`${preview}`}
+              src={userObj?.Image}
               sx={{ width: 26, height: 26 }}
-              onClick={toggleDrawer(true, "profile")}
-            /> */}
+              onClick={handleClick}
+            />
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              slotProps={{
+                paper: {
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 1.5,
+                    "& .MuiAvatar-root": {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    "&::before": {
+                      content: '""',
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      right: 7,
+                      width: 10,
+                      height: 10,
+                      bgcolor: "background.paper",
+                      transform: "translateY(-50%) rotate(45deg)",
+                      zIndex: 0,
+                    },
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              {menuData.map((item, index) => (
+                <MenuItem key={index} onClick={item.func}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  {item.text}
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
         </Box>
       </Box>
-      <ProfileDrawer />
+      <ProfileDrawer
+        preview={preview}
+        setPreview={setPreview}
+        handleImageChange={handleImageChange}
+        save={save}
+        handleUpdateImage={handleUpdateImage}
+      />
     </>
   );
 };

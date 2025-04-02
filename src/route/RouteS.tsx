@@ -10,10 +10,12 @@ import AllProducts from "../Pages/AllProducts";
 import ProductsCategory from "../Pages/ProductsCategory";
 import ViewProduct from "../Pages/ViewProduct";
 import PaymentPage from "../Pages/Payment";
+import LoginPage from "../Auth/Login";
 const RoutesApp = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/Pages/Products" replace />} />
+      <Route path="/" element={<Navigate to="/Login" replace />} />
+      <Route path='Login' element ={<LoginPage/> }/>
       
       <Route path="/Pages" element={<Layout />}>
         <Route

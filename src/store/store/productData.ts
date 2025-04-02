@@ -26,6 +26,7 @@ interface ProductState {
     open: boolean;
     list: string;
   };
+  user: any;
 }
 
 const initialState: ProductState = {
@@ -44,6 +45,7 @@ const initialState: ProductState = {
     open: false,
     list: "",
   },
+  user: null,
 };
 
 const productSlice = createSlice({
@@ -86,6 +88,9 @@ const productSlice = createSlice({
     setDrawerOpen: (state, action) => {
       state.drawerOpen = action.payload;
     },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
 });
 
@@ -101,6 +106,7 @@ export const {
   setDeleteAddedToCart,
   setOrders,
   setFinalAmount,
-  setDrawerOpen
+  setDrawerOpen,
+  setUser
 } = productSlice.actions;
 export default productSlice.reducer;

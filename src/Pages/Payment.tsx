@@ -6,6 +6,7 @@ import {
   Stack,
   Tab,
   Tabs,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -14,17 +15,23 @@ import { CentralizedCard } from "../CentralizedComponents/Card/CentralizedCard";
 import OrederedProducts from "./OrederedProducts";
 import ShippingDetails from "./ShippingDetails";
 import PaymentMethod from "./PaymentMethod";
-import { ExpandMore } from "@mui/icons-material";
+import {
+  ExpandMore,
+  LocalShipping,
+  Payment,
+  ProductionQuantityLimits,
+} from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/Store";
 import { getOrderedProductList } from "../store/action/product";
+import { paymentTabStyle } from "../common/commonStyle";
 
 const TabPanel = ({ children, value, index }: any) => {
   return (
     <Box
       role="tabpanel"
       hidden={value !== index}
-      sx={{ p: "0 16px ", width: "100%" }}
+      sx={{ p: "0 16px ", width: "100%", boxSizing: "border-box" }}
     >
       {value === index && <>{children}</>}
     </Box>
@@ -40,16 +47,19 @@ const PaymentPage = () => {
 
   const data = [
     {
+      icon: <ProductionQuantityLimits />,
       label: "Ordered Products",
       children: <OrederedProducts setValue={setValue} />,
     },
     {
       label: "Shipping Details",
+      icon: <LocalShipping />,
       children: <ShippingDetails setValue={setValue} />,
     },
     {
+      icon: <Payment />,
       label: "Payment",
-      children: <PaymentMethod  />,
+      children: <PaymentMethod />,
     },
   ];
 
@@ -65,7 +75,6 @@ const PaymentPage = () => {
     (state: RootState) => state?.product?.finalAmount
   );
 
-
   useEffect(() => {
     dispatch(getOrderedProductList());
   }, [dispatch]);
@@ -78,21 +87,35 @@ const PaymentPage = () => {
         viewBack={true}
         bodyContent={
           <Stack direction={"row"} width={"100%"} height={"100%"}>
-            <Stack direction={"row"} width={"80%"} height={"100%"}>
+            {/* Left Content (70%) */}
+            <Box
+              sx={{
+                boxSizing: "border-box",
+                display: "flex",
+                width: "75%",
+                height: "100%",
+              }}
+            >
               <Tabs
                 orientation="vertical"
                 variant="scrollable"
                 value={value}
                 onChange={handleChange}
-                sx={{ borderRight: 1, width: "300px", borderColor: "divider" }}
+                sx={paymentTabStyle}
               >
                 {data.map((item, index) => (
-                  <Tab
-                    sx={{ textTransform: "capitalize" }}
-                    label={item.label}
-                    key={index}
-                    disabled={value !== index}
-                  />
+                  <Tooltip title={item.label} placement="right" key={index}>
+                    <Tab
+                      sx={{
+                        padding: 0,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                      icon={item.icon}
+                      key={index}
+                      // disabled={value !== index}
+                    />
+                  </Tooltip>
                 ))}
               </Tabs>
               {data.map((item, index) => (
@@ -100,11 +123,23 @@ const PaymentPage = () => {
                   {item.children}
                 </TabPanel>
               ))}
-            </Stack>
-            <Stack direction={"column"} width={"20%"} gap={1}>
+            </Box>
+
+            {/* Right Sidebar (30%) */}
+            <Stack
+              direction={"column"}
+              width={"25%"}
+              gap={1}
+              sx={{
+                // Ensure scroll instead of overlap
+                flex: 1, // Prevents shrinking
+              }}
+            >
+              {/* Accordion for Items */}
               <Accordion
                 expanded={expanded}
                 onChange={() => handleAccordionChange(!expanded)}
+                sx={{ width: "100%" }}
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography component="span" sx={{ fontSize: "14px" }}>
@@ -113,19 +148,27 @@ const PaymentPage = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   {orderedData.map((item: any) => (
-                    <Stack direction={"row"} justifyContent={"space-between"}>
-                    <Typography sx={{ fontSize: "14px" }}>
-                      {item.name} <span style={{ fontSize: "12px" }}>x{item.quantity}</span>
-                    </Typography>
-                    <Typography sx={{ fontSize: "14px" }}>
-                      <span style={{ fontSize: "12px" }}>&#8377;</span>{" "}
-                      {item.price}
-                    </Typography>
-                  </Stack>
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"space-between"}
+                      key={item.name}
+                    >
+                      <Typography sx={{ fontSize: "14px" }}>
+                        {item.name}{" "}
+                        <span style={{ fontSize: "12px" }}>
+                          x{item.quantity}
+                        </span>
+                      </Typography>
+                      <Typography sx={{ fontSize: "14px" }}>
+                        <span style={{ fontSize: "12px" }}>&#8377;</span>{" "}
+                        {item.price}
+                      </Typography>
+                    </Stack>
                   ))}
-                  
                 </AccordionDetails>
               </Accordion>
+
+              {/* Order Total */}
               <Stack
                 direction={"row"}
                 justifyContent={"space-between"}

@@ -8,6 +8,7 @@ import {
   setIsFavourite,
   setOrders,
   setProductList,
+  setUser,
 } from "../store/productData";
 import { ref, get, set } from "firebase/database";
 import { toast } from "sonner";
@@ -71,6 +72,122 @@ export const getCartList = () => async (dispatch: any) => {
   }
 };
 
+export const updateImage = async (data: any, type: string) => {
+  try {
+    const userListRef = ref(db, `userList`);
+    const snapshot = await get(userListRef);
+    const userList = snapshot.exists() ? snapshot.val() : []; // Get users as an object
+    console.log(userList);
+
+    const userIndex = userList.findIndex(
+      (user: any) =>
+        user.Email === data.Email && user.Password === data.Password
+    );
+    console.log(userIndex);
+
+    if (userIndex === -1) {
+      console.log("Cannot upload image");
+      toast.error("Cannot upload image");
+      return { status: 404 };
+    }
+    if (type === "save") {
+      userList[userIndex] = { ...userList[userIndex], Image: data.Image };
+      await set(userListRef, userList);
+      toast.success("Image uploaded successfully");
+    }
+    if (type === "delete") {
+      userList[userIndex] = { ...userList[userIndex], Image: "" };
+      await set(userListRef, userList);
+      toast.success("Image deleted successfully");
+    }
+
+
+    return { status: 200 };
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
+
+export const getSignedUpUser = () => async (dispatch: any) => {
+  try {
+    let userEmail = localStorage.getItem("userEmail");
+    const userListRef = ref(db, `userList`);
+    const snapshot = await get(userListRef);
+    const userList = snapshot.exists() ? snapshot.val() : []; // Get users as an object
+    console.log(userList);
+
+    const userObj = userList.find((user: any) => user.Email === userEmail);
+    console.log(userObj);
+
+    dispatch(setUser(userObj));
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
+
+export const signUpUser = async (data: any) => {
+  try {
+    const userListRef = ref(db, `userList`);
+    const snapshot = await get(userListRef);
+    const userList = snapshot.exists() ? snapshot.val() : []; // Get users as an object
+    console.log(userList);
+
+    const userIndex = userList.findIndex(
+      (user: any) =>
+        user.Email === data.email && user.Password === data.password
+    );
+
+    if (userIndex === -1) {
+      console.log("User not found");
+      toast.error("User not found");
+      return { success: false, message: "User not found", user: null };
+    }
+    localStorage.setItem("userEmail", data.email);
+
+    userList[userIndex] = { ...userList[userIndex], isLoggedin: true };
+
+    await set(userListRef, userList);
+
+    toast.success("Signin successful");
+
+    return { status: 200 };
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
+
+export const addUserList = async (data: any) => {
+  try {
+    const userListRef = ref(db, `userList`);
+    const snapshot = await get(userListRef);
+
+    const userList = snapshot.exists() ? snapshot.val() : []; // Get users as an object
+    console.log(userList);
+
+    // Check if user already exists by email
+    const exist = userList.some(
+      (item: any) =>
+        item.Email === data.Email &&
+        item.Username === data.Username &&
+        item.Password === data.Password
+    );
+
+    if (exist) {
+      console.log("User already exists");
+      toast.error("User already exists");
+      return;
+    }
+    userList.push(data);
+
+    await set(userListRef, userList);
+
+    toast.success("Signup successful");
+
+    return { status: 200 };
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
 
 export const addFavouriteList = (data: any) => async (dispatch: any) => {
   try {
@@ -199,8 +316,9 @@ export const addOrderList =
       const orderListRef = ref(db, `orders`);
       const snapshot = await get(orderListRef);
       let orderList = snapshot.exists() ? snapshot.val() : [];
-      
+
       if (Array.isArray(data)) {
+        
         orderList = [...data]; // Merge new products into existing orders
         console.log(orderList);
       } else {
@@ -216,22 +334,21 @@ export const addOrderList =
     }
   };
 
-  export const getOrderedProductList = () => async (dispatch: any) => {
-    try {
-      
-      const orderListRef = ref(db, `orders`);
-      const snapshot = await get(orderListRef);
-      let orderList = snapshot.exists() ? snapshot.val() : [];
- 
-      console.log("Fetched Orders:", orderList);
+export const getOrderedProductList = () => async (dispatch: any) => {
+  try {
+    const orderListRef = ref(db, `orders`);
+    const snapshot = await get(orderListRef);
+    let orderList = snapshot.exists() ? snapshot.val() : [];
 
-      if (orderList && Object.keys(orderList).length > 0) {
-        dispatch(setOrders(orderList)); // Corrected data passing
-      } else {
-        console.log("No product data available");
-        dispatch(setOrders([])); // Dispatch empty array if no data
-      }
-    } catch (error) {
-      console.error("Error fetching product list:", error);
-    } 
-  };
+    console.log("Fetched Orders:", orderList);
+
+    if (orderList && Object.keys(orderList).length > 0) {
+      dispatch(setOrders(orderList)); // Corrected data passing
+    } else {
+      console.log("No product data available");
+      dispatch(setOrders([])); // Dispatch empty array if no data
+    }
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};

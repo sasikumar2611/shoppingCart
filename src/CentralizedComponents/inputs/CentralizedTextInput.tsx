@@ -15,9 +15,9 @@ const CentralizedTextInput = forwardRef<
 >(({ errorMessage, focused, label, grid, isMandatory, ...props }, ref) => {
   return (
     <Grid size={{ xs: grid || 12 }}>
-      <Stack >
+      <Stack direction="column" >
         {label && (
-          <InputLabel sx={{ fontSize: "14px" }}>
+          <InputLabel  sx={{ fontSize: "14px", marginBottom: 1 }}>
             {label}{" "}
             {isMandatory && (
               <span style={{ color: "red", marginLeft: "4px" }}>*</span>
@@ -26,7 +26,6 @@ const CentralizedTextInput = forwardRef<
         )}
         <TextField
           size="small"
-          margin="normal"
           error={!!errorMessage}
           helperText={errorMessage}
           ref={ref}

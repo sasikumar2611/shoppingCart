@@ -63,7 +63,7 @@ CentralizedTextAreaProps
       <Grid size={{ xs: grid || 12 }}>
         <Stack>
           {label && (
-            <InputLabel sx={{ fontSize: "14px",paddingBottom:'14px' }}>
+            <InputLabel sx={{ fontSize: "14px",paddingBottom:'8px' }}>
               {label}{" "}
               {isMandatory && (
                 <span style={{ color: "red", marginLeft: "4px" }}>*</span>

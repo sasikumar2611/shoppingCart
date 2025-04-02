@@ -4,6 +4,10 @@ import CentralizedTextInput from "../CentralizedComponents/inputs/CentralizedTex
 import Grid from "@mui/material/Grid2";
 import CentralizedTextArea from "../CentralizedComponents/inputs/CentralizedTextArea";
 import { CommonButton } from "../CentralizedComponents/button/commonButton";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/Store";
+import { getSignedUpUser } from "../store/action/product";
 
 interface ShippingDetailsProps {
   Name: string;
@@ -22,11 +26,27 @@ const ShippingDetails = ({
 }: {
   setValue: React.Dispatch<React.SetStateAction<number>>;
 }) => {
+const dispatch =useDispatch<AppDispatch>()
+ const userObj = useSelector((state: RootState) => state.product.user);
+  console.log(userObj);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ShippingDetailsProps>();
+  } = useForm<ShippingDetailsProps>({
+    defaultValues: {
+      Name: userObj?.Username,
+      mobileNumber: "",
+      email: userObj?.Email,
+      city: "",
+      zipCode: "",
+      state: "",
+      address: "",
+    },
+  });
+
+
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
@@ -52,6 +72,10 @@ const ShippingDetails = ({
     //   console.error("Login error:", error);
     // }
   };
+
+  useEffect(()=>{
+    dispatch(getSignedUpUser());
+  },[])
   return (
     <Box
       sx={{
@@ -64,7 +88,7 @@ const ShippingDetails = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid size={{ xs: 6 }}>
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
               <CentralizedTextInput
                 label="Name"
                 {...register("Name", {
@@ -99,7 +123,7 @@ const ShippingDetails = ({
             </Grid>
           </Grid>
           <Grid size={{ xs: 6 }}>
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
               <CentralizedTextInput
                 label="Mobile Number"
                 {...register("mobileNumber", {

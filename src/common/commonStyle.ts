@@ -37,7 +37,7 @@ export const btnstyle = {
   padding: "7px 14px",
   borderRadius: "25px",
   textTransform: "none",
-}
+};
 
 export const AutoCompleteStyle = {
   "& .MuiOutlinedInput-notchedOutline": {
@@ -138,33 +138,33 @@ export const centralizedDatePickerStyle = {
     color: "black !important",
   },
 };
-export const searchBarStyle = (
+export const searchBarStyle = () =>
   // btnColor: any, fontColor: any
 
-) => ({
-  width: "100%",
-  backgroundColor: "#e3e2e2",
-  color: 'white',
-  borderRadius: "25px",
-  "& .MuiInputBase-input": {
-    padding: "0px !important",
-    color: "black",
-    fontSize: "16px !important",
-  },
-  "& .MuiInputBase-root": {
-    padding:'5px 8px'
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    border: "none",
-  },
-  "& .MuiSvgIcon-root": {
-    fontSize: "26px",
-    backgroundColor: '#7d4dfa',
-    padding: "3px",
-    borderRadius: "25px",
+  ({
+    width: "100%",
+    backgroundColor: "#e3e2e2",
     color: "white",
-  },
-});
+    borderRadius: "25px",
+    "& .MuiInputBase-input": {
+      padding: "0px !important",
+      color: "black",
+      fontSize: "16px !important",
+    },
+    "& .MuiInputBase-root": {
+      padding: "5px 8px",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiSvgIcon-root": {
+      fontSize: "26px",
+      backgroundColor: "#7d4dfa",
+      padding: "3px",
+      borderRadius: "25px",
+      color: "white",
+    },
+  });
 export const logoutBtnStyle = (btnColor: any, fontColor: any) => ({
   display: "flex",
   alignItems: "center",
@@ -196,7 +196,7 @@ export const logoutBtnStyle = (btnColor: any, fontColor: any) => ({
     },
   },
 });
-export const   centralizedTextFieldStyle = {
+export const centralizedTextFieldStyle = {
   "&.MuiFormControl-root ": {
     marginTop: "8px !important",
     marginBottom: "12px !important",
@@ -222,4 +222,25 @@ export const   centralizedTextFieldStyle = {
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
     borderColor: "#000",
   },
+};
+
+export const paymentTabStyle = {
+  width: "100px",
+  borderRight: 1,
+  // flexShrink: 0,
+  "& .MuiTabs-indicator": {
+    backgroundColor: "#7d4dfa",
+  },
+
+  "& .MuiTab-root": {
+    color: "#000",
+  },
+
+  "& .Mui-selected": {
+    color: "#7d4dfa !important",
+    backgroundColor: "#fff",
+  },
+
+  borderColor: "divider",
+  "& .MuiTabScrollButton-vertical": { display: "none" }, // Fixed selector
 };

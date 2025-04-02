@@ -22,7 +22,7 @@ function App() {
         <BrowserRouter>
           <ScrollToTop />
           <RoutesApp />
-          <Toaster position="bottom-left" duration={1500} richColors />
+          <Toaster position="bottom-right" duration={1500} richColors />
         </BrowserRouter>
       </Provider>
 

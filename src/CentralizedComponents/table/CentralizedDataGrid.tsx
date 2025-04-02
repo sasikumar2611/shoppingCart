@@ -36,7 +36,7 @@ const CenteralizeDataGrid: React.FC<CentralizedTableProps> = ({
         <DataGrid
           rows={rowsWithSi ?? []}
           columns={columns}
-          sx={{ height: "50vh" }}
+          sx={{ height: "50vh",width:'100%' }}
           hideFooter
           disableDensitySelector
           disableColumnSelector
