@@ -41,7 +41,7 @@ CentralizedTextAreaProps
       // backgroundColor: theme.components.MuiInputBase.styleOverrides.root.backgroundColor,
       // color: theme.components.MuiInputBase.styleOverrides.root.color,
       backgroundColor: "#fff",
-      color: "#000",
+      color: disabled ? "#aaa" : "#000",
       fontSize: "14px",
       lineHeight: "1.5",
       padding: "8px",

@@ -5,6 +5,7 @@ import {
   Logout,
   Search,
   Settings,
+  ViewStream,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -44,6 +45,8 @@ const Header = () => {
   console.log(userObj);
 
   
+  const color = useSelector((state: RootState) => state.product.color);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -120,11 +123,21 @@ const Header = () => {
       func: () => navigate("/Pages/OrderHistory"),
     },
     {
+      icon: <ViewStream sx={{ marginRight: 2 }} />,
+      text: "Your Order ",
+      value: "yourOrder",
+
+      func: () => navigate("/Pages/yourOrder"),
+    },
+    {
       icon: <Settings sx={{ marginRight: 2 }} />,
       text: "Settings",
       value: "settings",
 
-      func: () => navigate("/Pages/Settings"),
+      func: () => {
+        dispatch(toggleDrawer(true, "settings"));
+        handleClose();
+      },
     },
     {
       icon: <Logout sx={{ marginRight: 2 }} />,
@@ -184,7 +197,7 @@ const Header = () => {
       >
         <Box
           sx={{
-            backgroundColor: "#7d4dfa",
+            backgroundColor: color,
             padding: "15px",
             borderRadius: "15px",
             width: "100%",
@@ -206,7 +219,7 @@ const Header = () => {
               onChange={(e) => {
                 setSearchProducts(e.target.value);
               }}
-              sx={searchBarStyle}
+              sx={searchBarStyle(color)}
               slotProps={{
                 input: {
                   startAdornment: (
@@ -286,7 +299,7 @@ const Header = () => {
             >
               {menuData.map((item, index) => (
                 <MenuItem key={index} onClick={item.func}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{color:color}}>{item.icon}</ListItemIcon>
                   {item.text}
                 </MenuItem>
               ))}

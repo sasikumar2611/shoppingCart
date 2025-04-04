@@ -3,6 +3,8 @@ import Card from "@mui/material/Card";
 import { CardContent, Divider, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CommonButton } from "../button/commonButton";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
 
 interface CardComponentProps {
   bodyContent: React.ReactNode;
@@ -19,6 +21,8 @@ export const CentralizedCard: React.FC<CardComponentProps> = ({
   viewBack = false,
 }) => {
   const navigate = useNavigate();
+  const color = useSelector((state: RootState) => state.product.color);
+
   return (
     <Card
       sx={{
@@ -45,7 +49,7 @@ export const CentralizedCard: React.FC<CardComponentProps> = ({
                 label="View All"
                 onClick={() => navigate(`/Pages/${title}`)}
                 disableElevation
-                sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
+                sx={{ color: color, backgroundColor: "transparent" }}
               />
             )}
             {viewBack && (
@@ -53,7 +57,7 @@ export const CentralizedCard: React.FC<CardComponentProps> = ({
                 label="Back"
                 onClick={() => navigate(-1)}
                 disableElevation
-                sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
+                sx={{ color: color, backgroundColor: "transparent" }}
               />
             )}
           </Stack>

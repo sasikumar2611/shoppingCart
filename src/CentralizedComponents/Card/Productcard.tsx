@@ -2,7 +2,7 @@ import React from "react";
 import Card from "@mui/material/Card";
 import {
   Box,
-  Button,
+
   CardContent,
   Rating,
   Stack,
@@ -16,10 +16,11 @@ import {
   ShoppingCartCheckout,
   Visibility,
 } from "@mui/icons-material";
-import { btnstyle } from "../../common/commonStyle";
+
 import { useNavigate } from "react-router-dom";
 import CommonIconButton from "../button/CommonIconButton";
 import { useDispatch } from "react-redux";
+import { CommonButton } from "../button/commonButton";
 
 interface Product {
   id: number;
@@ -132,9 +133,8 @@ export const Productcard: React.FC<CardComponentProps> = ({
               <Typography sx={{ color: "black", fontSize: "16px" }}>
                 <span style={{ fontSize: "14px" }}>&#8377; </span> {item.price}
               </Typography>
-              <Button sx={btnstyle} onClick={() => {}}>
-                Buy Now
-              </Button>
+              <CommonButton label='Buy Now' onClick={() => {}} />
+             
             </Stack>
           </Stack>
         </CardContent>

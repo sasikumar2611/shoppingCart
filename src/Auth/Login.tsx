@@ -3,10 +3,8 @@ import {
   Button,
   Typography,
   Box,
-
   IconButton,
   InputAdornment,
-
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import {
@@ -98,6 +96,9 @@ const LoginPage = () => {
   };
 
   // const dispatch = useDispatch<AppDispatch>();
+  const userRole = localStorage.getItem("userRole");
+  console.log(userRole);
+
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
@@ -150,8 +151,10 @@ const LoginPage = () => {
     console.log(data);
     try {
       const resposne = await signUpUser(data);
-      if (resposne?.status === 200) {
-        navigate("/Pages/Products");
+      if (!!userRole && resposne?.status === 200) {
+        userRole === "Admin"
+          ? navigate("/Pages/Dashboard")
+          : navigate("/Pages/Products");
       }
     } catch (error) {
       console.error("Error creating new chat:", error);
@@ -164,7 +167,11 @@ const LoginPage = () => {
       Email: data.email,
       Username: data.name,
       Password: data.password,
-      role: data.name === "Sasi kumar" ? "Admin" : "User",
+      role:
+        data.name === "Sasi kumar" &&
+        data.email === "sasikumar26112001@gmail.com"
+          ? "Admin"
+          : "User",
       isLoggedin: false,
       Image: "",
     };
@@ -732,9 +739,8 @@ const LoginPage = () => {
                     )}
                     {otpSent && !isOtpVerified && (
                       <>
-                    
                         <CentralizedTextInput
-                        label='Otp'
+                          label="Otp"
                           {...forgetPasswordForm.register(
                             "otp",
                             forgetPasswordValidation.otp
@@ -753,9 +759,8 @@ const LoginPage = () => {
                     {isOtpVerified && (
                       <>
                         {" "}
-                       
                         <CentralizedTextInput
-                        label='New Password'
+                          label="New Password"
                           type={showPassword ? "text" : "password"}
                           {...forgetPasswordForm.register(
                             "newPassword",
@@ -786,9 +791,8 @@ const LoginPage = () => {
                             ),
                           }}
                         />
-                       
                         <CentralizedTextInput
-                        label='Confirm Password'
+                          label="Confirm Password"
                           type="password"
                           {...forgetPasswordForm.register(
                             "confirmPassword",

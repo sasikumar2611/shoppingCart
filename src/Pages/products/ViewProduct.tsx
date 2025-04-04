@@ -7,17 +7,17 @@ import {
   ShoppingCartCheckout,
 } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { CustomCard } from "../CentralizedComponents/Card/CustomCard";
-import { CommonButton } from "../CentralizedComponents/button/commonButton";
-import CommonIconButton from "../CentralizedComponents/button/CommonIconButton";
-import noImage from "../assets/no image.jpg";
+import { CustomCard } from "../../CentralizedComponents/Card/CustomCard";
+import { CommonButton } from "../../CentralizedComponents/button/commonButton";
+import CommonIconButton from "../../CentralizedComponents/button/CommonIconButton";
+import noImage from "../../assets/no image.jpg";
 import {
   handleCartChange,
   handleFavouriteChange,
-} from "../common/commonMethods";
+} from "../../common/commonMethods";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/Store";
-import { getProductList } from "../store/action/product";
+import { AppDispatch, RootState } from "../../store/Store";
+import { getProductList } from "../../store/action/product";
 
 const ViewProduct = () => {
   const navigate = useNavigate();

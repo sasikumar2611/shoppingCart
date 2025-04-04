@@ -3,7 +3,6 @@ import {
   setDeleteAddedToCart,
   setDeleteFavourite,
   setFavoriteList,
-  setFinalAmount,
   setIsAddedToCart,
   setIsFavourite,
   setOrders,
@@ -101,7 +100,6 @@ export const updateImage = async (data: any, type: string) => {
       toast.success("Image deleted successfully");
     }
 
-
     return { status: 200 };
   } catch (error) {
     console.error("Error fetching product list:", error);
@@ -142,13 +140,14 @@ export const signUpUser = async (data: any) => {
       toast.error("User not found");
       return { success: false, message: "User not found", user: null };
     }
-    localStorage.setItem("userEmail", data.email);
 
     userList[userIndex] = { ...userList[userIndex], isLoggedin: true };
 
     await set(userListRef, userList);
 
     toast.success("Signin successful");
+    localStorage.setItem("userEmail", userList[userIndex].Email);
+    localStorage.setItem("userRole", userList[userIndex].role);
 
     return { status: 200 };
   } catch (error) {
@@ -310,29 +309,47 @@ export const addCartList = (data: any) => async (dispatch: any) => {
   }
 };
 
-export const addOrderList =
-  (data: any, amount: number) => async (dispatch: any) => {
-    try {
-      const orderListRef = ref(db, `orders`);
-      const snapshot = await get(orderListRef);
-      let orderList = snapshot.exists() ? snapshot.val() : [];
+export const addOrderList = (data: any) => async (dispatch: any) => {
+  try {
+    const orderListRef = ref(db, `orders`);
+    const snapshot = await get(orderListRef);
+    let orderList = snapshot.exists() ? snapshot.val() : [];
 
-      if (Array.isArray(data)) {
-        
-        orderList = [...data]; // Merge new products into existing orders
-        console.log(orderList);
-      } else {
-        console.error("Invalid data format: Expected an array of products");
-        return;
-      }
+    orderList.push(data);
+    console.log(orderList);
 
-      await set(orderListRef, orderList);
-      // dispatch(setOrders(orderList));
-      dispatch(setFinalAmount(amount));
-    } catch (error) {
-      console.error("Error fetching product list:", error);
+    await set(orderListRef, orderList);
+    dispatch(setOrders(orderList));
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
+
+export const postUserOrders = async (data: any) => {
+  try {
+    const userEmail = localStorage.getItem("userEmail");
+    const orderListRef = ref(db, `orders`);
+    const snapshot = await get(orderListRef);
+    let orderList = snapshot.exists() ? snapshot.val() : [];
+    const userIndex = orderList.findIndex(
+      (user: any) => user.customerEmail === userEmail
+    );
+    console.log(userIndex);
+
+    if (userIndex === -1) {
+      console.log("Cannot submit ");
+      toast.error("Cannot submit ");
+      return { status: 404 };
     }
-  };
+
+    orderList[userIndex] = { ...orderList[userIndex], ...data };
+
+    await set(orderListRef, orderList);
+    return { status: 200 };
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
 
 export const getOrderedProductList = () => async (dispatch: any) => {
   try {

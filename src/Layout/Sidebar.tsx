@@ -2,9 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { Box, IconButton, Drawer, Tabs, Tab, Typography, Stack } from "@mui/material";
 import {
+  Dashboard,
   FormatListBulleted,
   KeyboardArrowLeft,
   KeyboardArrowRight,
+  Queue,
   // Dashboard,
   // Home,
   // Logout,
@@ -14,6 +16,8 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { sidebarStyle } from "../common/commonStyle";
 import logo from '../assets/sk-high-resolution-logo.png'
+import { useSelector } from "react-redux";
+import { RootState } from "../store/Store";
 const Sidebar = ({
   isOpen,
   setIsOpen,
@@ -22,19 +26,30 @@ const Sidebar = ({
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const location = useLocation();
+  const userRole=localStorage.getItem('userRole')
   const SidebarData = [
+    {
+      icon: <Dashboard sx={{ marginRight: 2 }} />,
+      text: "Dashboard",
+      value: "home",
+      path: "/Pages/Dashboard",
+      roles: ["Admin"],
+      
+    },
     {
       icon: <FormatListBulleted sx={{ marginRight: 2 }} />,
       text: "Products",
       value: "products",
       path: "/Pages/Products",
+      roles: ["Admin",'User'],
     },
-    // {
-    //   icon: <Home sx={{ marginRight: 2 }} />,
-    //   text: "Home",
-    //   value: "home",
-    //   path: "/Pages/Home",
-    // },
+    {
+      icon: <Queue sx={{ marginRight: 2 }} />,
+      text: "Add Products",
+      value: "addProducts",
+      path: "/Pages/AddProducts",
+      roles: ["Admin"],
+    },
     // {
     //   icon: <Person sx={{ marginRight: 2 }} />,
     //   text: "Profile",
@@ -59,7 +74,20 @@ const Sidebar = ({
     //   value: "logout",
     //   path: "/Pages/Logout",
     // },
+    // {
+    //       name: "Story",
+    //       path: "/Pages/story",
+    //       icon: <AutoStoriesOutlined />,
+    //       roles: ["Manager", "Developer", "TeamLead"],
+    //     },
   ];
+
+  const color = useSelector((state: RootState) => state.product.color); 
+
+    const filteredSidebarData = SidebarData.filter(
+      (item :any) => item.roles && item.roles.includes(userRole)
+    );
+
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -113,7 +141,7 @@ const Sidebar = ({
            
             width: isOpen ? 200 : 60,
             transition: "width 0.3s ease-in-out",
-            backgroundColor: "#7d4dfa",
+            backgroundColor: color,
             boxSizing: "border-box",
           },
           
@@ -133,8 +161,7 @@ const Sidebar = ({
               justifyContent: "center",
               fontSize: "22px",
               fontWeight: "bold",
-            
-              color: "white ",
+              color: "#fff",
               whiteSpace: "nowrap",
             }}
           >
@@ -147,9 +174,9 @@ const Sidebar = ({
           orientation="vertical"
           value={selectedTab === activeIndex ? selectedTab : activeIndex}
           onChange={handleTabChange}
-          sx={sidebarStyle}
+          sx={sidebarStyle(color)}
         >
-          {SidebarData.map((item, index) => (
+          {filteredSidebarData.map((item, index) => (
             <Tab
               disableRipple
               key={index}
@@ -178,7 +205,7 @@ const Sidebar = ({
                         height: "100%",
                       }}
                     >
-                      <Typography sx={{ fontSize: "14px" }}>
+                      <Typography sx={{ fontSize: "14px", whiteSpace:'nowrap' }}>
                         {isOpen && item.text}
                       </Typography>
                     </Box>

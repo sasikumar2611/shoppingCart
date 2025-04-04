@@ -5,7 +5,7 @@ import {
   deleteCartList,
   deleteFavouriteList,
 } from "../store/action/product";
-import { setDrawerOpen } from "../store/store/productData";
+import { setColor, setDrawerOpen } from "../store/store/productData";
 
 export const handleVisit = ({ item, category, navigate }: any) => {
   navigate(`/Pages/${category}/${item.id}/${item.name}`);
@@ -55,15 +55,20 @@ export const handleCartChange = ({
 
 export const handleBuy = (
   item: any,
-  amount: number,
   navigate: any,
   dispatch: any
 ) => {
   navigate("/Pages/Payment");
+console.log(item);
 
-  dispatch(addOrderList(item, amount));
+  dispatch(addOrderList(item));
 };
 
 export const toggleDrawer = (open: boolean, list: string)=>(dispatch:any) => {
   dispatch(setDrawerOpen({ open: open, list: list }));
 };
+
+export const handleColorChange = ( color: string)=>(dispatch:any) => {
+  dispatch(setColor(color));
+};
+

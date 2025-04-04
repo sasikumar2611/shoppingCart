@@ -1,19 +1,19 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import Grid from "@mui/material/Grid2";
-import { CentralizedCard } from "../CentralizedComponents/Card/CentralizedCard";
-import { Productcard } from "../CentralizedComponents/Card/Productcard";
+import { CentralizedCard } from "../../CentralizedComponents/Card/CentralizedCard";
+import { Productcard } from "../../CentralizedComponents/Card/Productcard";
 import { v4 as uuidv4 } from "uuid";
 import {
   handleCartChange,
   handleFavouriteChange,
   handleVisit,
-} from "../common/commonMethods";
+} from "../../common/commonMethods";
 
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/Store";
-import { getProductList } from "../store/action/product";
-import { CustomCard } from "../CentralizedComponents/Card/CustomCard";
+import { AppDispatch, RootState } from "../../store/Store";
+import { getProductList } from "../../store/action/product";
+import { CustomCard } from "../../CentralizedComponents/Card/CustomCard";
 import { useNavigate } from "react-router-dom";
 
 const AllProducts = () => {

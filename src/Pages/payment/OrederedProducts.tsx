@@ -1,13 +1,13 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import CenteralizeDataGrid from "../CentralizedComponents/table/CentralizedDataGrid";
+import CenteralizeDataGrid from "../../CentralizedComponents/table/CentralizedDataGrid";
 import { GridColDef } from "@mui/x-data-grid";
-import { CommonButton } from "../CentralizedComponents/button/commonButton";
+import { CommonButton } from "../../CentralizedComponents/button/commonButton";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/Store";
+import { AppDispatch, RootState } from "../../store/Store";
 import { useEffect } from "react";
-import { getOrderedProductList } from "../store/action/product";
+import { getOrderedProductList } from "../../store/action/product";
 import { useNavigate } from "react-router-dom";
-import { toggleDrawer } from "../common/commonMethods";
+import { toggleDrawer } from "../../common/commonMethods";
 
 const OrederedProducts = ({ setValue }: { setValue: React.Dispatch<React.SetStateAction<number>> }) => {
   const columns: GridColDef[] = [
@@ -91,14 +91,14 @@ const OrederedProducts = ({ setValue }: { setValue: React.Dispatch<React.SetStat
   ];
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const orderedData = useSelector((state: RootState) => state?.product?.orders);
-  console.log(orderedData);
+  const userEmail= localStorage.getItem("userEmail");
+  const orderList = useSelector((state: RootState) => state?.product?.orders);
+  console.log(orderList);
+  
+  const color = useSelector((state: RootState) => state.product.color);
 
-  const finalAmount = useSelector(
-    (state: RootState) => state?.product?.finalAmount
-  );
-  console.log(finalAmount);
-
+  const userOrder= orderList.find((item)=>item.customerEmail===userEmail);
+  console.log(userOrder);
 
   useEffect(() => {
     dispatch(getOrderedProductList());
@@ -106,7 +106,7 @@ const OrederedProducts = ({ setValue }: { setValue: React.Dispatch<React.SetStat
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
-      <CenteralizeDataGrid data={orderedData ?? []} columns={columns} />
+      <CenteralizeDataGrid data={userOrder?.customerProducts ?? []} columns={columns} />
       <Stack
         width={"100%"}
         height={"100px"}
@@ -127,7 +127,7 @@ const OrederedProducts = ({ setValue }: { setValue: React.Dispatch<React.SetStat
               sx={{ color: "black", fontSize: "16px" }}
             >
               {/* SubTotal({list?.length} Items): */}
-              SubTotal( {orderedData?.length} Items):
+              SubTotal ({userOrder?.customerProducts?.length} Items):
             </Typography>
             <Typography
               variant="h6"
@@ -135,7 +135,7 @@ const OrederedProducts = ({ setValue }: { setValue: React.Dispatch<React.SetStat
               sx={{ color: "black", fontSize: "14px" }}
             >
               <span style={{ fontSize: "12px" }}>&#8377; </span>{" "}
-              {finalAmount.toFixed(2)}
+              {userOrder?.orderTotalAmount.toFixed(2)}
             </Typography>
           </Stack>
           <Divider />
@@ -149,7 +149,7 @@ const OrederedProducts = ({ setValue }: { setValue: React.Dispatch<React.SetStat
           >
             <CommonButton
               label="Back to Cart"
-              sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
+              sx={{ color: color, backgroundColor: "transparent" }}
               onClick={() => {
                 navigate(-1);
                 dispatch(toggleDrawer(true, "cartList"));

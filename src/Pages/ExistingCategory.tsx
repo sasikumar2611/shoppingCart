@@ -1,44 +1,23 @@
 import { Box, Stack } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { CommonButton } from "../CentralizedComponents/button/commonButton";
+import CentralizedTextArea from "../CentralizedComponents/inputs/CentralizedTextArea";
 import CentralizedTextInput from "../CentralizedComponents/inputs/CentralizedTextInput";
 import Grid from "@mui/material/Grid2";
-import CentralizedTextArea from "../CentralizedComponents/inputs/CentralizedTextArea";
-import { CommonButton } from "../CentralizedComponents/button/commonButton";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/Store";
-import { getSignedUpUser } from "../store/action/product";
+import { useForm } from "react-hook-form";
+import CentralizedSelectInput from "../CentralizedComponents/inputs/CentralizedSelect";
+import { useState } from "react";
 
-interface ShippingDetailsProps {
-  Name: string;
-  mobileNumber: string;
-  email: string;
-
-  city: string;
-  zipCode: string;
-  state: string;
-
-  address: string;
-}
-
-const ShippingDetails = ({
-  setValue,
-}: {
-  setValue: React.Dispatch<React.SetStateAction<number>>;
-}) => {
-const dispatch =useDispatch<AppDispatch>()
- const userObj = useSelector((state: RootState) => state.product.user);
-  console.log(userObj);
-
+const ExistingCategory = () => {
+  const [value, _setValue] = useState(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ShippingDetailsProps>({
+  } = useForm({
     defaultValues: {
-      Name: userObj?.Username,
+      category: null,
       mobileNumber: "",
-      email: userObj?.Email,
+      email: "",
       city: "",
       zipCode: "",
       state: "",
@@ -46,58 +25,25 @@ const dispatch =useDispatch<AppDispatch>()
     },
   });
 
-
-
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
-    //     try{
-    //     const payload = {
-    //       employeeCode: data.employeeCode,
-    //       password: data.password,
-    //     }
-    //    const response= login(payload);
-    // console.log(response);
-    // // const token = response.data.accessToken;
-    // // const refreshToken = response.data.refreshToken;
-    // // console.log(token);
-    // // console.log(refreshToken);
-    // // localStorage.setItem("token", token);
-    // // localStorage.setItem("refreshToken", refreshToken);
-    // // const userId = jwtDecode(token);
-    // // console.log(userId);
-    // // localStorage.setItem("userId", userId["id"]);
-
-    // navigate("/pages/managerProjects");
-    // } catch (error) {
-    //   console.error("Login error:", error);
-    // }
   };
-
-  useEffect(()=>{
-    dispatch(getSignedUpUser());
-  },[])
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "calc(80vh - 100px)", // Ensures scrolling within page
-        overflowY: "auto", // Enables scrolling when overflowing
-       
-      }}
-    >
+    <Box sx={{ width: "100%", height: "100%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid size={{ xs: 6 }}>
             <Grid container spacing={2}>
-              <CentralizedTextInput
-                label="Name"
-                {...register("Name", {
-                  required: "Name is required",
-                })}
-                error={!!errors.Name}
-                helperText={errors.Name?.message}
+                <CentralizedSelectInput
+                label="Category"
+                options={[
+                  { label: "Category 1", id: 1 },
+                  { label: "Category 2", id: 2 },
+                ]}
+                value={value}
+                error={!!errors.category}
+                helperText={errors.category?.message}
               />
-
               <CentralizedTextInput
                 label="Email"
                 {...register("email", {
@@ -115,7 +61,6 @@ const dispatch =useDispatch<AppDispatch>()
                 label="ZipCode"
                 {...register("zipCode", {
                   required: "ZipCode required",
-
                 })}
                 error={!!errors.zipCode}
                 helperText={errors.zipCode?.message}
@@ -173,7 +118,7 @@ const dispatch =useDispatch<AppDispatch>()
             <CommonButton
               label="Back to Orders"
               sx={{ color: "#7d4dfa", backgroundColor: "transparent" }}
-              onClick={() => setValue((prev) => prev - 1)}
+              onClick={() => {}}
             />
             <CommonButton type="submit" label={"Submit"} />
           </Stack>
@@ -183,4 +128,4 @@ const dispatch =useDispatch<AppDispatch>()
   );
 };
 
-export default ShippingDetails;
+export default ExistingCategory;

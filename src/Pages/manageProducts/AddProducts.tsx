@@ -11,20 +11,19 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { CentralizedCard } from "../CentralizedComponents/Card/CentralizedCard";
-import OrederedProducts from "./OrederedProducts";
-import ShippingDetails from "./ShippingDetails";
-import PaymentMethod from "./PaymentMethod";
+import { CentralizedCard } from "../../CentralizedComponents/Card/CentralizedCard";
+
 import {
   ExpandMore,
   LocalShipping,
-  Payment,
   ProductionQuantityLimits,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/Store";
-import { getOrderedProductList } from "../store/action/product";
-import { paymentTabStyle } from "../common/commonStyle";
+import { AppDispatch, RootState } from "../../store/Store";
+import { getOrderedProductList } from "../../store/action/product";
+import { paymentTabStyle } from "../../common/commonStyle";
+import ExistingProduct from "../ExistingCategory";
+import NewCategory from "../NewCategory";
 
 const TabPanel = ({ children, value, index }: any) => {
   return (
@@ -38,7 +37,7 @@ const TabPanel = ({ children, value, index }: any) => {
   );
 };
 
-const PaymentPage = () => {
+const AddProducts = () => {
   const [value, setValue] = useState(0);
 
   const handleChange = (_: any, newValue: number) => {
@@ -48,18 +47,13 @@ const PaymentPage = () => {
   const data = [
     {
       icon: <ProductionQuantityLimits />,
-      label: "Ordered Products",
-      children: <OrederedProducts setValue={setValue} />,
+      label: "Existing Category",
+      children: <ExistingProduct />,
     },
     {
-      label: "Shipping Details",
+      label: "New Category",
       icon: <LocalShipping />,
-      children: <ShippingDetails setValue={setValue} />,
-    },
-    {
-      icon: <Payment />,
-      label: "Payment",
-      children: <PaymentMethod />,
+      children: <NewCategory />,
     },
   ];
 
@@ -74,6 +68,9 @@ const PaymentPage = () => {
   const finalAmount = useSelector(
     (state: RootState) => state?.product?.finalAmount
   );
+
+  const color = useSelector((state: RootState) => state.product.color);
+
 
   useEffect(() => {
     dispatch(getOrderedProductList());
@@ -101,17 +98,18 @@ const PaymentPage = () => {
                 variant="scrollable"
                 value={value}
                 onChange={handleChange}
-                sx={paymentTabStyle}
+                sx={paymentTabStyle(color)}
               >
                 {data.map((item, index) => (
                   <Tooltip title={item.label} placement="right" key={index}>
                     <Tab
                       sx={{
-                        padding: 0,
                         display: "flex",
                         justifyContent: "center",
+                        
                       }}
-                      icon={item.icon}
+                      // icon={item.icon}
+                      label={item.label}
                       key={index}
                       // disabled={value !== index}
                     />
@@ -188,4 +186,4 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default AddProducts;

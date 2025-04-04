@@ -2,7 +2,7 @@ import { BrowserRouter, useLocation } from "react-router-dom";
 
 import "./App.css";
 import { Provider } from "react-redux";
-import RoutesApp from "./route/RouteS";
+import RoutesApp from "./route/Routes";
 import store from "./store/Store";
 import { useEffect } from "react";
 import { Toaster } from "sonner";

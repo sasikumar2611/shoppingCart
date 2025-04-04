@@ -1,13 +1,15 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import { btnstyle } from "../../common/commonStyle";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
 
 interface CentralizedButtonProps {
-  label: string;
+  label?: string;
   onClick?: () => void;
   type?: "button" | "submit" | "reset" | "file";
   variant?: "contained" | "outlined" | "text";
-  color?: "primary" | "secondary" | "error" | "success" | "info" | "warning";
+  // color?: "primary" | "secondary" | "error" | "success" | "info" | "warning";
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   disabled?: boolean;
@@ -23,7 +25,6 @@ export const CommonButton: React.FC<CentralizedButtonProps> = ({
   onClick,
   type = "button",
   variant = "contained",
-  color,
   startIcon,
   endIcon,
   disabled = false,
@@ -34,16 +35,18 @@ export const CommonButton: React.FC<CentralizedButtonProps> = ({
   onChange,
   ...props
 }) => {
+    const btncolor = useSelector((state: RootState) => state.product.color);
+  
   return type === "file" ? (
     <Button
       component="label" 
       variant={variant}
-      color={color}
+
       startIcon={startIcon}
       endIcon={endIcon}
       disabled={disabled}
       fullWidth={fullWidth}
-      sx={{ ...btnstyle, ...sx }}
+      sx={{ ...btnstyle(btncolor), ...sx }}
       disableElevation={disableElevation}
       disableRipple={disableRipple}
       {...props}
@@ -55,12 +58,12 @@ export const CommonButton: React.FC<CentralizedButtonProps> = ({
     <Button
       type={type}
       variant={variant}
-      color={color}
+  
       startIcon={startIcon}
       endIcon={endIcon}
       disabled={disabled}
       fullWidth={fullWidth}
-      sx={{ ...btnstyle, ...sx }}
+      sx={{ ...btnstyle(btncolor), ...sx }}
       disableElevation={disableElevation}
       disableRipple={disableRipple}
       onClick={onClick}

@@ -11,6 +11,7 @@ interface Product {
 }
 
 interface ProductState {
+  color: string;
   isFavourite: boolean;
   deleteFavourite: boolean;
   isAddedToCart: boolean;
@@ -20,6 +21,7 @@ interface ProductState {
   productList: any[];
   cartList: Product[];
   amount: number;
+  confirmOrder: boolean;
   orders: any[];
   finalAmount: number;
   drawerOpen: {
@@ -30,8 +32,10 @@ interface ProductState {
 }
 
 const initialState: ProductState = {
+  color: "#7d4dfa",
   isFavourite: false,
   deleteAddedToCart: false,
+  confirmOrder: false,
   deleteFavourite: false,
   isAddedToCart: false,
   visitProduct: null,
@@ -52,6 +56,10 @@ const productSlice = createSlice({
   name: "productData",
   initialState,
   reducers: {
+    setColor: (state, action) => {
+      state.color = action.payload;
+    },
+   
     setIsFavourite: (state, action) => {
       state.isFavourite = action.payload;
     },
@@ -91,6 +99,9 @@ const productSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setConfirmOrder: (state, action) => {
+      state.confirmOrder = action.payload;
+    },
   },
 });
 
@@ -107,6 +118,9 @@ export const {
   setOrders,
   setFinalAmount,
   setDrawerOpen,
-  setUser
+  setUser,
+  setColor,
+  setConfirmOrder,
+
 } = productSlice.actions;
 export default productSlice.reducer;

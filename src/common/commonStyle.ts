@@ -1,5 +1,6 @@
+
 //using
-export const sidebarStyle = {
+export const sidebarStyle = (color: string) => ({
   "& .MuiTabs-flexContainer": {
     flexDirection: "column",
     height: "100%",
@@ -20,7 +21,7 @@ export const sidebarStyle = {
     borderRadius: "25px  0px 0 25px",
   },
   "& .Mui-selected": {
-    color: "#7d4dfa !important",
+    color: `${color} !important`,
     backgroundColor: "#fff",
     borderRadius: "25px  0px 0 25px",
     boxShadow: "inset 2px 5px 10px rgba(0, 0, 0, 0.3)",
@@ -28,16 +29,28 @@ export const sidebarStyle = {
   "& .Mui-selected:hover": {
     backgroundColor: "#fff !important",
   },
-};
+});
 
 //using
-export const btnstyle = {
-  backgroundColor: "#7d4dfa",
+// export const btnstyle = {
+//   backgroundColor: "#7d4dfa",
+//   color: "white",
+//   padding: "6px 14px",
+//   borderRadius: "25px",
+//   textTransform: "none",
+// };
+
+
+export const btnstyle = (color:string) =>
+  // btnColor: any, fontColor: any
+
+  ({
+    backgroundColor: `${color} !important`,
   color: "white",
-  padding: "7px 14px",
+  padding: "6px 14px",
   borderRadius: "25px",
   textTransform: "none",
-};
+  });
 
 export const AutoCompleteStyle = {
   "& .MuiOutlinedInput-notchedOutline": {
@@ -138,7 +151,7 @@ export const centralizedDatePickerStyle = {
     color: "black !important",
   },
 };
-export const searchBarStyle = () =>
+export const searchBarStyle = (color:string) =>
   // btnColor: any, fontColor: any
 
   ({
@@ -159,7 +172,7 @@ export const searchBarStyle = () =>
     },
     "& .MuiSvgIcon-root": {
       fontSize: "26px",
-      backgroundColor: "#7d4dfa",
+      backgroundColor: color,
       padding: "3px",
       borderRadius: "25px",
       color: "white",
@@ -224,23 +237,24 @@ export const centralizedTextFieldStyle = {
   },
 };
 
-export const paymentTabStyle = {
+export const paymentTabStyle=(color:string) => ({
   width: "100px",
   borderRight: 1,
+  // height: "100%",
   // flexShrink: 0,
   "& .MuiTabs-indicator": {
-    backgroundColor: "#7d4dfa",
+    backgroundColor: color,
   },
 
   "& .MuiTab-root": {
-    color: "#000",
+    color: "#000 ",
   },
 
   "& .Mui-selected": {
-    color: "#7d4dfa !important",
+    color: color,
     backgroundColor: "#fff",
   },
 
   borderColor: "divider",
   "& .MuiTabScrollButton-vertical": { display: "none" }, // Fixed selector
-};
+});
