@@ -44,13 +44,13 @@ const Header = () => {
   const userObj = useSelector((state: RootState) => state.product.user);
   console.log(userObj);
 
-  
+
   const color = useSelector((state: RootState) => state.product.color);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
- 
+
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target) {
@@ -58,7 +58,7 @@ const Header = () => {
         }
         setSave(true);
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
   // const handledeleteImage = async () => {
@@ -109,7 +109,7 @@ const Header = () => {
       icon: <Avatar src={userObj?.Image} sx={{ marginRight: 2 }} />,
       text: "Profile",
       value: "profile",
-      
+
       func: () => {
         dispatch(toggleDrawer(true, "profile"));
         handleClose();
@@ -120,20 +120,26 @@ const Header = () => {
       text: "Order History",
       value: "orderHistory",
 
-      func: () => navigate("/Pages/OrderHistory"),
+      func: () => {
+        navigate("/Pages/OrderHistory"),
+          handleClose();
+      }
     },
     {
       icon: <ViewStream sx={{ marginRight: 2 }} />,
       text: "Your Order ",
       value: "yourOrder",
 
-      func: () => navigate("/Pages/yourOrder"),
+      func: () => {
+        navigate("/Pages/yourOrder"),
+          handleClose();
+      }
     },
     {
       icon: <Settings sx={{ marginRight: 2 }} />,
       text: "Settings",
       value: "settings",
-
+      
       func: () => {
         dispatch(toggleDrawer(true, "settings"));
         handleClose();
@@ -182,7 +188,7 @@ const Header = () => {
     dispatch,
     favouriteList.length,
     cartList.length,
-    preview,save
+    preview, save
   ]);
 
   return (
@@ -299,7 +305,7 @@ const Header = () => {
             >
               {menuData.map((item, index) => (
                 <MenuItem key={index} onClick={item.func}>
-                  <ListItemIcon sx={{color:color}}>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ color: color }}>{item.icon}</ListItemIcon>
                   {item.text}
                 </MenuItem>
               ))}

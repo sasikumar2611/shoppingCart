@@ -6,6 +6,7 @@ import {
   setIsAddedToCart,
   setIsFavourite,
   setOrders,
+  setOrdersHisoryList,
   setProductList,
   setUser,
 } from "../store/productData";
@@ -311,14 +312,24 @@ export const addCartList = (data: any) => async (dispatch: any) => {
 
 export const addOrderList = (data: any) => async (dispatch: any) => {
   try {
+    console.log("order data", data);
     const orderListRef = ref(db, `orders`);
     const snapshot = await get(orderListRef);
     let orderList = snapshot.exists() ? snapshot.val() : [];
 
-    orderList.push(data);
-    console.log(orderList);
+    const userIndex = orderList.findIndex(
+      (user: any) => user.customerEmail === data.customerEmail
+    );
+    console.log(userIndex);
+
+    if (userIndex === -1) {
+      orderList.push(data);
+    } else {
+      orderList[userIndex] = { ...data };
+    }
 
     await set(orderListRef, orderList);
+
     dispatch(setOrders(orderList));
   } catch (error) {
     console.error("Error fetching product list:", error);
@@ -364,6 +375,43 @@ export const getOrderedProductList = () => async (dispatch: any) => {
     } else {
       console.log("No product data available");
       dispatch(setOrders([])); // Dispatch empty array if no data
+    }
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
+
+export const getOrderHistory = () => async (dispatch: any) => {
+  try {
+    const orderHistoryRef = ref(db, `orderHistory`);
+    const snapshot = await get(orderHistoryRef);
+    let orderHistoryList = snapshot.exists() ? snapshot.val() : [];
+
+    dispatch(setOrdersHisoryList(orderHistoryList));
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+  }
+};
+
+export const addOrderHistory = async (data: any) => {
+  try {
+    const orderHistoryRef = ref(db, `orderHistory`);
+    const snapshot = await get(orderHistoryRef);
+    let orderHistoryList = snapshot.exists() ? snapshot.val() : [];
+
+    orderHistoryList.push(data);
+    await set(orderHistoryRef, orderHistoryList);
+
+    const orderListRef = ref(db, `orders`);
+    const order = await get(orderListRef);
+    let orderList = order.exists() ? order.val() : [];
+    const userIndex = orderList.findIndex(
+      (user: any) => user.customerEmail === data.customerEmail
+    );
+    console.log(userIndex);
+    if (userIndex !== -1) {
+      orderList.splice(userIndex, 1);
+      await set(orderListRef, orderList);
     }
   } catch (error) {
     console.error("Error fetching product list:", error);

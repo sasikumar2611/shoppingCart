@@ -23,6 +23,7 @@ interface ProductState {
   amount: number;
   confirmOrder: boolean;
   orders: any[];
+  ordersHisoryList: any[];
   finalAmount: number;
   drawerOpen: {
     open: boolean;
@@ -44,6 +45,7 @@ const initialState: ProductState = {
   cartList: [],
   amount: 0,
   orders: [],
+  ordersHisoryList: [],
   finalAmount: 0,
   drawerOpen: {
     open: false,
@@ -62,6 +64,9 @@ const productSlice = createSlice({
    
     setIsFavourite: (state, action) => {
       state.isFavourite = action.payload;
+    },
+    setOrdersHisoryList: (state, action) => {
+      state.ordersHisoryList = action.payload;
     },
     setDeleteFavourite: (state, action) => {
       state.deleteFavourite = action.payload;
@@ -121,6 +126,6 @@ export const {
   setUser,
   setColor,
   setConfirmOrder,
-
+  setOrdersHisoryList
 } = productSlice.actions;
 export default productSlice.reducer;

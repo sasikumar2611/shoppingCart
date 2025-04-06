@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "../Layout/Layout";
-import Home from "../Pages/Home";
 import Dashboard from "../Pages/manageProducts/Dashboard";
 import NotFound from "../Pages/notFound/NotFound";
 import AllProducts from "../Pages/products/AllProducts";
@@ -11,6 +10,7 @@ import LoginPage from "../Auth/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import AddProducts from "../Pages/manageProducts/AddProducts";
 import ViewProduct from "../Pages/products/ViewProduct";
+import YourOrder from "../Pages/order/Yourorder";
 const RoutesApp = () => {
   return (
     <Routes>
@@ -18,7 +18,15 @@ const RoutesApp = () => {
       <Route path="Login" element={<LoginPage />} />
 
       <Route path="/Pages" element={<Layout />}>
-        <Route path="Home" element={<Home />} />
+        {/* <Route path="Home" element={<Home />} /> */}
+        <Route
+          path="yourorder"
+          element={
+            <ProtectedRoute allowedRoles={["Admin","User"]}>
+              <YourOrder />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="Products"
           element={

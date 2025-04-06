@@ -23,7 +23,10 @@ import {
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/Store";
-import { getOrderedProductList } from "../../../store/action/product";
+import {
+  addOrderHistory,
+  getOrderedProductList,
+} from "../../../store/action/product";
 import { paymentTabStyle } from "../../../common/commonStyle";
 import { CommonButton } from "../../../CentralizedComponents/button/commonButton";
 
@@ -112,7 +115,7 @@ const PaymentPage = () => {
         setValue((prev) => prev + 1);
         setStatus("success");
 
-
+        addOrderHistory(userOrder);
       },
       prefill: {
         name: userOrder?.customerName,
@@ -128,11 +131,12 @@ const PaymentPage = () => {
       modal: {
         ondismiss: function () {
           console.log("Payment cancelled or failed");
+          addOrderHistory(userOrder); // for testing
+          setValue((prev) => prev + 1);
           setStatus("failed");
         },
       },
     };
-    console.log(options);
 
     const razorpay = new window.Razorpay(options);
     razorpay.open();
@@ -175,7 +179,6 @@ const PaymentPage = () => {
                           padding: 0,
                           display: "flex",
                           justifyContent: "center",
-                          
                         }}
                         icon={item.icon}
                         key={index}
